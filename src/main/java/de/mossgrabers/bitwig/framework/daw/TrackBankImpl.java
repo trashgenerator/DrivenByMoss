@@ -9,6 +9,7 @@ import de.mossgrabers.framework.controller.IValueChanger;
 import de.mossgrabers.framework.daw.IHost;
 import de.mossgrabers.framework.observer.NoteObserver;
 
+import com.bitwig.extension.controller.api.BooleanValue;
 import com.bitwig.extension.controller.api.CursorTrack;
 import com.bitwig.extension.controller.api.Track;
 import com.bitwig.extension.controller.api.TrackBank;
@@ -21,8 +22,8 @@ import com.bitwig.extension.controller.api.TrackBank;
  */
 public class TrackBankImpl extends AbstractTrackBankImpl
 {
-    // TODO Requires API 9
-    // private BooleanValue isTopGroup;
+    private BooleanValue isTopGroup;
+
 
     /**
      * Constructor.
@@ -40,10 +41,8 @@ public class TrackBankImpl extends AbstractTrackBankImpl
     {
         super (host, valueChanger, cursorTrack, bank, numTracks, numScenes, numSends);
 
-        // TODO Requires API 9
-        // this.isTopGroup = this.bank.getItemAt (0).createParentTrack (0, 0).createEqualsValue
-        // (rootGroup);
-        // this.isTopGroup.markInterested ();
+        this.isTopGroup = this.bank.getItemAt (0).createParentTrack (0, 0).createEqualsValue (rootGroup);
+        this.isTopGroup.markInterested ();
     }
 
 
@@ -59,8 +58,7 @@ public class TrackBankImpl extends AbstractTrackBankImpl
     @Override
     public boolean hasParent ()
     {
-        // TODO Requires API 9
-        return true; // !this.isTopGroup.get ();
+        return !this.isTopGroup.get ();
     }
 
 

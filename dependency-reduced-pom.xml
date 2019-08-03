@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.mossgrabers</groupId>
-  <artifactId>DrivenByMoss</artifactId>
-  <name>DrivenByMoss</name>
-  <version>7.04</version>
+  <artifactId>DrivenByMoss-API9</artifactId>
+  <name>DrivenByMoss-API9</name>
+  <version>8.00</version>
   <build>
     <plugins>
       <plugin>
@@ -116,7 +116,7 @@
     <dependency>
       <groupId>com.bitwig</groupId>
       <artifactId>extension-api</artifactId>
-      <version>7</version>
+      <version>9</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

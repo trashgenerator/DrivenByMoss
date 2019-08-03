@@ -235,7 +235,7 @@ public class SlotImpl extends AbstractItemImpl implements ISlot
     @Override
     public void remove ()
     {
-        this.csBank.deleteClip (this.getIndex ());
+        this.slot.deleteObject ();
     }
 
 
