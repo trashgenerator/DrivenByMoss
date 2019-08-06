@@ -391,6 +391,22 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
+    public void updateStepDuration (final int step, final int row, final double duration)
+    {
+        this.getClip ().updateStepDuration (step, row, duration);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void updateStepVelocity (final int step, final int row, final double velocity)
+    {
+        this.getClip ().updateStepDuration (step, row, velocity);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
     public void clearRow (final int row)
     {
         this.getClip ().clearSteps (row);
