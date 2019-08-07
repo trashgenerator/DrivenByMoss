@@ -31,6 +31,9 @@ public class NoteRepeatImpl implements INoteRepeat
 
         this.noteRepeat.isEnabled ().markInterested ();
         this.noteRepeat.period ().markInterested ();
+        this.noteRepeat.noteLengthRatio ().markInterested ();
+        this.noteRepeat.shuffle ().markInterested ();
+        this.noteRepeat.usePressureToVelocity ().markInterested ();
     }
 
 
@@ -63,5 +66,37 @@ public class NoteRepeatImpl implements INoteRepeat
     public double getPeriod (final ITrack track)
     {
         return this.noteRepeat.period ().get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void setNoteLength (final ITrack track, final double length)
+    {
+        this.noteRepeat.noteLengthRatio ().set (length);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public double getNoteLength (final ITrack track)
+    {
+        return this.noteRepeat.noteLengthRatio ().get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isShuffle (final ITrack track)
+    {
+        return this.noteRepeat.shuffle ().get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void toggleShuffle (final ITrack track)
+    {
+        this.noteRepeat.shuffle ().toggle ();
     }
 }
