@@ -186,4 +186,16 @@ public interface INoteClip extends IClip
      * @return True if it can be scrolled
      */
     boolean canScrollStepsForwards ();
+
+
+    void changeStepVelocity (int step, int row, int control);
+
+
+    double getStepVelocity (int step, int note);
+
+
+    double getStepDuration (int step, int row);
+
+
+    void changeStepDuration (int step, int note, int value, final double fractionValue);
 }

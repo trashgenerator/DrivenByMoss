@@ -9,10 +9,10 @@ import de.mossgrabers.framework.controller.display.Format;
 import de.mossgrabers.framework.controller.display.GraphicDisplay;
 import de.mossgrabers.framework.daw.IHost;
 import de.mossgrabers.framework.daw.midi.IMidiOutput;
+import de.mossgrabers.framework.graphics.DefaultGraphicsDimensions;
 import de.mossgrabers.framework.graphics.IBitmap;
 import de.mossgrabers.framework.graphics.IGraphicsDimensions;
 import de.mossgrabers.framework.graphics.display.VirtualDisplay;
-import de.mossgrabers.framework.graphics.grid.DefaultGraphicsDimensions;
 import de.mossgrabers.framework.utils.Pair;
 
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class PushDisplay extends GraphicDisplay
      *
      * @param host The host
      * @param isPush2 True if Push 2
-     * @param maxParameterValue
+     * @param maxParameterValue The maximum parameter value (upper bound)
      * @param output The midi output
      * @param configuration The Push configuration
      */
@@ -106,7 +106,7 @@ public class PushDisplay extends GraphicDisplay
         this.maxParameterValue = maxParameterValue;
         this.isPush2 = isPush2;
 
-        final IGraphicsDimensions dimensions = new DefaultGraphicsDimensions (960, 160);
+        final IGraphicsDimensions dimensions = new DefaultGraphicsDimensions (960, 160, maxParameterValue);
         this.virtualDisplay = this.isPush2 ? new VirtualDisplay (host, this.model, configuration, dimensions, "Push 2 Display") : null;
         this.usbDisplay = this.isPush2 ? new PushUsbDisplay (host) : null;
     }

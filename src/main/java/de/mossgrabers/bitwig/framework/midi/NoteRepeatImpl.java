@@ -34,6 +34,7 @@ public class NoteRepeatImpl implements INoteRepeat
         this.noteRepeat.noteLengthRatio ().markInterested ();
         this.noteRepeat.shuffle ().markInterested ();
         this.noteRepeat.usePressureToVelocity ().markInterested ();
+        this.noteRepeat.velocityRamp ().markInterested ();
     }
 
 
@@ -98,5 +99,45 @@ public class NoteRepeatImpl implements INoteRepeat
     public void toggleShuffle (final ITrack track)
     {
         this.noteRepeat.shuffle ().toggle ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean usePressure (final ITrack track)
+    {
+        return this.noteRepeat.usePressureToVelocity ().get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void toggleUsePressure (final ITrack track)
+    {
+        this.noteRepeat.usePressureToVelocity ().toggle ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public double getVelocityRamp (final ITrack track)
+    {
+        return this.noteRepeat.velocityRamp ().get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVelocityRamp (final ITrack track, final double value)
+    {
+        this.noteRepeat.velocityRamp ().set (value);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public String getVelocityRampStr (ITrack track)
+    {
+        return String.format ("%.2f", Double.valueOf (this.getVelocityRamp (track)));
     }
 }

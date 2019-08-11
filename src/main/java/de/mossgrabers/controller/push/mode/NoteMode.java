@@ -6,11 +6,11 @@ package de.mossgrabers.controller.push.mode;
 
 import de.mossgrabers.controller.push.controller.PushControlSurface;
 import de.mossgrabers.framework.controller.IValueChanger;
-import de.mossgrabers.framework.controller.display.Display;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.INoteClip;
 import de.mossgrabers.framework.graphics.display.DisplayModel;
 import de.mossgrabers.framework.scale.Scales;
+import de.mossgrabers.framework.utils.StringUtils;
 
 
 /**
@@ -20,14 +20,9 @@ import de.mossgrabers.framework.scale.Scales;
  */
 public class NoteMode extends BaseMode
 {
-    INoteClip            clip         = null;
-    double               noteLength   = 1.0;
-    int                  noteVelocity = 127;
-    int                  step         = 0;
-    int                  note         = 60;
-
-    private final Object updateLock   = new Object ();
-    private boolean      isDirty      = false;
+    INoteClip clip = null;
+    int       step = 0;
+    int       note = 60;
 
 
     /**
@@ -48,16 +43,12 @@ public class NoteMode extends BaseMode
      * @param clip The clip to edit
      * @param step The step to edit
      * @param note The note to edit
-     * @param noteLength The note length to edit
-     * @param noteVelocity The note velocity to edit
      */
-    public void setValues (final INoteClip clip, final int step, final int note, final double noteLength, final int noteVelocity)
+    public void setValues (final INoteClip clip, final int step, final int note)
     {
         this.clip = clip;
         this.step = step;
         this.note = note;
-        this.noteLength = noteLength;
-        this.noteVelocity = noteVelocity;
     }
 
 
@@ -70,44 +61,22 @@ public class NoteMode extends BaseMode
         {
             // Note length
             case 0:
-                if (!this.increaseKnobMovement ())
-                    return;
-                final double speed = valueChanger.calcKnobSpeed (value, 1);
-                this.noteLength = Math.max (1.0, this.noteLength + speed);
+                // TODO
+                // if (!this.increaseKnobMovement ())
+                // return;
+
+                this.clip.changeStepDuration (this.step, this.note, value, 0.1);
+
                 break;
-            // Note length fine
-            case 1:
-                if (!this.increaseKnobMovement ())
-                    return;
-                final double speed2 = valueChanger.calcKnobSpeed (value, 0.1);
-                this.noteLength = Math.max (0.1, this.noteLength + speed2);
-                break;
+
             // Note velocity
-            case 2:
-                this.noteVelocity = valueChanger.changeValue (value, this.noteVelocity, 1, 128);
+            case 1:
+                this.clip.changeStepVelocity (this.step, this.note, value);
+                // TODO valueChanger.changeValue (value, this.noteVelocity, 1, 128);
                 break;
+
             default:
                 return;
-        }
-
-        synchronized (this.updateLock)
-        {
-            if (this.isDirty)
-                return;
-            this.isDirty = true;
-            this.model.getHost ().scheduleTask (this::updateNote, 200);
-        }
-    }
-
-
-    private void updateNote ()
-    {
-        synchronized (this.updateLock)
-        {
-            this.clip.updateStepDuration (this.step, this.note, this.noteLength);
-            this.clip.updateStepVelocity (this.step, this.note, this.noteVelocity);
-
-            this.isDirty = false;
         }
     }
 
@@ -116,15 +85,17 @@ public class NoteMode extends BaseMode
     @Override
     public void updateDisplay1 ()
     {
-        final int quarters = (int) Math.floor (this.noteLength);
-        final int fine = (int) Math.floor (this.noteLength * 100) % 100;
-        final Display d = this.surface.getDisplay ();
-        d.clear ().setCell (0, 0, "Quarters").setCell (1, 0, Integer.toString (quarters));
-        d.setCell (0, 1, "Fine").setCell (1, 1, Integer.toString (fine));
-        d.setCell (0, 2, "Velocity").setCell (1, 2, Integer.toString (this.noteVelocity * 100 / 127) + "%");
-        d.setBlock (3, 0, "Step: " + (this.step + 1));
-        d.setBlock (3, 1, "Selec. Note: " + Scales.formatNoteAndOctave (this.note, -3));
-        d.allDone ();
+        // TODO
+        // final int quarters = (int) Math.floor (this.noteLength);
+        // final int fine = (int) Math.floor (this.noteLength * 100) % 100;
+        // final Display d = this.surface.getDisplay ();
+        // d.clear ().setCell (0, 0, "Quarters").setCell (1, 0, Integer.toString (quarters));
+        // d.setCell (0, 1, "Fine").setCell (1, 1, Integer.toString (fine));
+        // d.setCell (0, 2, "Velocity").setCell (1, 2, Integer.toString (this.noteVelocity * 100 /
+        // 127) + "%");
+        // d.setBlock (3, 0, "Step: " + (this.step + 1));
+        // d.setBlock (3, 1, "Selec. Note: " + Scales.formatNoteAndOctave (this.note, -3));
+        // d.allDone ();
     }
 
 
@@ -132,16 +103,22 @@ public class NoteMode extends BaseMode
     @Override
     public void updateDisplay2 ()
     {
-        final int quarters = (int) Math.floor (this.noteLength);
-        final int fine = (int) Math.floor (this.noteLength * 100) % 100;
+        // TODO
+        double noteLength = clip.getStepDuration (step, note);
+
+        String measures = StringUtils.formatMeasures (this.model.getTransport ().getQuartersPerMeasure (), noteLength, 0);
 
         final DisplayModel message = this.surface.getDisplay ().getModel ();
-        message.addParameterElement ("Quarters", quarters, Integer.toString (quarters), this.isKnobTouched[0], -1);
-        message.addParameterElement ("Fine", fine, Integer.toString (fine), this.isKnobTouched[1], -1);
-        final int parameterValue = this.noteVelocity * 1023 / 127;
-        message.addParameterElement ("Velocity", parameterValue, Integer.toString (this.noteVelocity * 100 / 127) + "%", this.isKnobTouched[2], parameterValue);
-        message.addOptionElement ("    Step: " + (this.step + 1), "", false, "    Selected note: " + Scales.formatNoteAndOctave (this.note, -3), "", false, false);
-        for (int i = 4; i < 8; i++)
+        // TODO
+        int quarters = 0;
+        message.addParameterElement ("Length", quarters, measures, this.isKnobTouched[0], -1);
+
+        double noteVelocity = this.clip.getStepVelocity (this.step, this.note);
+        // TODO
+        final int parameterValue = (int) (noteVelocity * 1023);
+        message.addParameterElement ("Velocity", parameterValue, Integer.toString ((int) (noteVelocity * 100)) + "%", this.isKnobTouched[2], parameterValue);
+        message.addOptionElement ("    Step: " + (this.step + 1), "", false, "    Note: " + Scales.formatNoteAndOctave (this.note, -3), "", false, false);
+        for (int i = 3; i < 8; i++)
             message.addOptionElement ("", "", false, "", "", false, false);
         message.send ();
     }

@@ -8,6 +8,7 @@ import de.mossgrabers.framework.controller.IValueChanger;
 import de.mossgrabers.framework.daw.INoteClip;
 
 import com.bitwig.extension.controller.api.Clip;
+import com.bitwig.extension.controller.api.Clip.StepInfo;
 import com.bitwig.extension.controller.api.ControllerHost;
 import com.bitwig.extension.controller.api.SettableColorValue;
 
@@ -397,11 +398,45 @@ public class CursorClipImpl implements INoteClip
     }
 
 
+    public double getStepDuration (final int step, final int row)
+    {
+        final Clip clip = this.getClip ();
+        final StepInfo info = clip.getStepInfo (step, row);
+        return info.getDuration ();
+    }
+
+
+    public void changeStepDuration (final int step, final int row, final int control, final double fractionValue)
+    {
+        final Clip clip = this.getClip ();
+        final StepInfo info = clip.getStepInfo (step, row);
+        final double duration = info.getDuration () + this.valueChanger.calcKnobSpeed (control, fractionValue);
+        clip.updateStepDuration (step, row, Math.max (0, duration));
+    }
+
+
     /** {@inheritDoc} */
     @Override
     public void updateStepVelocity (final int step, final int row, final double velocity)
     {
-        this.getClip ().updateStepDuration (step, row, velocity);
+        this.getClip ().updateStepVelocity (step, row, velocity);
+    }
+
+
+    public double getStepVelocity (final int step, final int row)
+    {
+        final Clip clip = this.getClip ();
+        final StepInfo info = clip.getStepInfo (step, row);
+        return info.getVelocity ();
+    }
+
+
+    public void changeStepVelocity (final int step, final int row, final int control)
+    {
+        final Clip clip = this.getClip ();
+        final StepInfo info = clip.getStepInfo (step, row);
+        final double velocity = info.getVelocity () + this.valueChanger.calcKnobSpeed (control, 0.01);
+        clip.updateStepVelocity (step, row, Math.min (1, Math.max (0, velocity)));
     }
 
 

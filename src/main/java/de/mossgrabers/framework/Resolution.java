@@ -78,7 +78,7 @@ public enum Resolution
 
     /**
      * Get the value of the resolution.
-     * 
+     *
      * @param index The index of the resolution enum
      * @return The value
      */
@@ -90,7 +90,7 @@ public enum Resolution
 
     /**
      * Get the name of the resolution.
-     * 
+     *
      * @param index The index of the resolution enum
      * @return The name
      */
