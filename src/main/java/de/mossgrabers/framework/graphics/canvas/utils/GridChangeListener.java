@@ -15,5 +15,5 @@ public interface GridChangeListener
     /**
      * The display grid has changed.
      */
-    void gridHasChanged ();
+    void render ();
 }

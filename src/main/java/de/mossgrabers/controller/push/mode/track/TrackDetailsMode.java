@@ -8,7 +8,7 @@ import de.mossgrabers.controller.push.controller.PushColors;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
 import de.mossgrabers.controller.push.mode.BaseMode;
 import de.mossgrabers.controller.push.view.ColorView;
-import de.mossgrabers.framework.controller.display.Display;
+import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.ITrackBank;
 import de.mossgrabers.framework.daw.data.IMasterTrack;
@@ -154,9 +154,9 @@ public class TrackDetailsMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay1 ()
+    public void updateDisplay1 (final ITextDisplay display)
     {
-        final Display d = this.surface.getDisplay ().clearRow (0).clearRow (1);
+        final ITextDisplay d = this.surface.getDisplay ().clearRow (0).clearRow (1);
         final ITrack deviceChain = this.getSelectedTrack ();
         if (deviceChain == null)
             d.setRow (1, "                     Please selecta track...                        ").done (0).done (2);
@@ -185,25 +185,24 @@ public class TrackDetailsMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay2 ()
+    public void updateDisplay2 (final DisplayModel message)
     {
-        final DisplayModel message = this.surface.getDisplay ().getModel ();
         final ITrack deviceChain = this.getSelectedTrack ();
         if (deviceChain == null)
-            message.setMessage (3, "Please select a track...");
-        else
         {
-            message.addOptionElement ("Track: " + deviceChain.getName (), "", false, "", "Active", deviceChain.isActivated (), false);
-            message.addOptionElement ("", "", false, "", "Rec Arm", deviceChain.isRecArm (), false);
-            message.addOptionElement ("", "", false, "", "Mute", deviceChain.isMute (), false);
-            message.addOptionElement ("", "", false, "", "Solo", deviceChain.isSolo (), false);
-            message.addOptionElement ("", "", false, "", "Monitor", deviceChain.isMonitor (), false);
-            message.addOptionElement ("", "", false, "", "Auto Monitor", deviceChain.isAutoMonitor (), false);
-            final boolean hasPinning = this.model.getHost ().hasPinning ();
-            message.addOptionElement ("", "", false, "", hasPinning ? "Pin Track" : "", hasPinning && this.model.isCursorTrackPinned (), false);
-            message.addOptionElement ("", "", false, "", "Select Color", false, false);
+            message.setMessage (3, "Please select a track...");
+            return;
         }
-        message.send ();
+
+        message.addOptionElement ("Track: " + deviceChain.getName (), "", false, "", "Active", deviceChain.isActivated (), false);
+        message.addOptionElement ("", "", false, "", "Rec Arm", deviceChain.isRecArm (), false);
+        message.addOptionElement ("", "", false, "", "Mute", deviceChain.isMute (), false);
+        message.addOptionElement ("", "", false, "", "Solo", deviceChain.isSolo (), false);
+        message.addOptionElement ("", "", false, "", "Monitor", deviceChain.isMonitor (), false);
+        message.addOptionElement ("", "", false, "", "Auto Monitor", deviceChain.isAutoMonitor (), false);
+        final boolean hasPinning = this.model.getHost ().hasPinning ();
+        message.addOptionElement ("", "", false, "", hasPinning ? "Pin Track" : "", hasPinning && this.model.isCursorTrackPinned (), false);
+        message.addOptionElement ("", "", false, "", "Select Color", false, false);
     }
 
 

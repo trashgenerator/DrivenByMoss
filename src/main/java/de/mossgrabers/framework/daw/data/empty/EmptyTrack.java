@@ -209,6 +209,14 @@ public class EmptyTrack extends EmptyChannel implements ITrack
         return this.slotBank;
     }
 
+
+    /** {@inheritDoc} */
+    @Override
+    public void createClip (final int slotIndex, final int lengthInBeats)
+    {
+        // Intentionally empty
+    }
+
     class EmptySlotBank extends EmptyBank<ISlot> implements ISlotBank
     {
         /** {@inheritDoc} */

@@ -5,14 +5,14 @@
 package de.mossgrabers.controller.push.mode.device;
 
 import de.mossgrabers.controller.push.PushConfiguration;
+import de.mossgrabers.controller.push.controller.Push1Display;
 import de.mossgrabers.controller.push.controller.PushColors;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
-import de.mossgrabers.controller.push.controller.PushDisplay;
 import de.mossgrabers.controller.push.mode.BaseMode;
 import de.mossgrabers.framework.command.TriggerCommandID;
 import de.mossgrabers.framework.controller.IValueChanger;
-import de.mossgrabers.framework.controller.display.Display;
 import de.mossgrabers.framework.controller.display.Format;
+import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IChannelBank;
 import de.mossgrabers.framework.daw.ICursorDevice;
 import de.mossgrabers.framework.daw.IModel;
@@ -292,9 +292,9 @@ public class DeviceLayerMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay1 ()
+    public void updateDisplay1 (final ITextDisplay display)
     {
-        final Display d = this.surface.getDisplay ().clear ();
+        final ITextDisplay d = this.surface.getDisplay ().clear ();
         final ICursorDevice cd = this.model.getCursorDevice ();
         if (!cd.doesExist ())
         {
@@ -355,15 +355,13 @@ public class DeviceLayerMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay2 ()
+    public void updateDisplay2 (final DisplayModel message)
     {
         final ICursorDevice cd = this.model.getCursorDevice ();
-        final DisplayModel message = this.surface.getDisplay ().getModel ();
         if (!cd.doesExist ())
         {
             for (int i = 0; i < 8; i++)
                 message.addOptionElement (i == 2 ? "Please select a device or press 'Add Device'..." : "", i == 7 ? "Up" : "", true, "", "", false, true);
-            message.send ();
             return;
         }
 
@@ -372,12 +370,10 @@ public class DeviceLayerMode extends BaseMode
         {
             for (int i = 0; i < 8; i++)
                 message.addOptionElement (i == 3 ? "Please create a " + (cd.hasDrumPads () ? "Drum Pad..." : "Device Layer...") : "", i == 7 ? "Up" : "", true, "", "", false, true);
-            message.send ();
             return;
         }
 
         this.updateDisplayElements (message, cd, cd.getLayerOrDrumPadBank ().getSelectedItem ());
-        message.send ();
     }
 
 
@@ -638,10 +634,10 @@ public class DeviceLayerMode extends BaseMode
     /**
      * Draw the fourth row.
      *
-     * @param d The display
+     * @param display The display
      * @param cd The cursor device
      */
-    protected void drawRow4 (final Display d, final ICursorDevice cd)
+    protected void drawRow4 (final ITextDisplay display, final ICursorDevice cd)
     {
         // Drum Pad Bank has size of 16, layers only 8
         final int offset = getDrumPadIndex (cd);
@@ -650,9 +646,8 @@ public class DeviceLayerMode extends BaseMode
         {
             final IChannel layer = bank.getItem (offset + i);
             final String n = StringUtils.shortenAndFixASCII (layer.getName (), layer.isSelected () ? 7 : 8);
-            d.setCell (3, i, layer.isSelected () ? PushDisplay.SELECT_ARROW + n : n);
+            display.setCell (3, i, layer.isSelected () ? Push1Display.SELECT_ARROW + n : n);
         }
-        d.allDone ();
     }
 
 

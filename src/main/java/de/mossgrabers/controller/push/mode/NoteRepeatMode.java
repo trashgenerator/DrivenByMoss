@@ -4,12 +4,12 @@
 
 package de.mossgrabers.controller.push.mode;
 
+import de.mossgrabers.controller.push.controller.Push1Display;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
-import de.mossgrabers.controller.push.controller.PushDisplay;
 import de.mossgrabers.framework.Resolution;
 import de.mossgrabers.framework.controller.IValueChanger;
-import de.mossgrabers.framework.controller.display.Display;
 import de.mossgrabers.framework.controller.display.Format;
+import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.daw.midi.INoteInput;
@@ -151,27 +151,27 @@ public class NoteRepeatMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay1 ()
+    public void updateDisplay1 (final ITextDisplay display)
     {
-        final Display d = this.surface.getDisplay ().clear ();
+        final ITextDisplay d = this.surface.getDisplay ().clear ();
 
         final ITrack selectedTrack = this.model.getCurrentTrackBank ().getSelectedItem ();
 
         d.setCell (0, 0, "Period:");
         final int selPeriodIndex = this.getSelectedPeriodIndex (selectedTrack);
         int pos = 0;
-        for (final Pair<String, Boolean> p: PushDisplay.createMenuList (4, Resolution.getNames (), selPeriodIndex))
+        for (final Pair<String, Boolean> p: Push1Display.createMenuList (4, Resolution.getNames (), selPeriodIndex))
         {
-            d.setCell (pos, 1, (p.getValue ().booleanValue () ? PushDisplay.SELECT_ARROW : " ") + p.getKey ());
+            d.setCell (pos, 1, (p.getValue ().booleanValue () ? Push1Display.SELECT_ARROW : " ") + p.getKey ());
             pos++;
         }
 
         d.setCell (0, 2, "Length:");
         final int selLengthIndex = this.getSelectedNoteLengthIndex (selectedTrack);
         pos = 0;
-        for (final Pair<String, Boolean> p: PushDisplay.createMenuList (4, Resolution.getNames (), selLengthIndex))
+        for (final Pair<String, Boolean> p: Push1Display.createMenuList (4, Resolution.getNames (), selLengthIndex))
         {
-            d.setCell (pos, 3, (p.getValue ().booleanValue () ? PushDisplay.SELECT_ARROW : " ") + p.getKey ());
+            d.setCell (pos, 3, (p.getValue ().booleanValue () ? Push1Display.SELECT_ARROW : " ") + p.getKey ());
             pos++;
         }
 
@@ -188,12 +188,11 @@ public class NoteRepeatMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay2 ()
+    public void updateDisplay2 (final DisplayModel message)
     {
         if (this.noteRepeat == null)
             return;
 
-        final DisplayModel message = this.surface.getDisplay ().getModel ();
         final ITrack selectedTrack = this.model.getCurrentTrackBank ().getSelectedItem ();
 
         message.addOptionElement ("Period", "", false, "", "", false, false);
@@ -208,10 +207,7 @@ public class NoteRepeatMode extends BaseMode
         message.addEmptyElement ();
 
         message.addOptionElement ("", "", false, "", "Shuffle", this.noteRepeat.isShuffle (selectedTrack), false);
-
         message.addParameterElementWithPlainMenu ("", false, "Pressure", null, this.noteRepeat.usePressure (selectedTrack), "Vel. Ramp", getRampDisplayValue (selectedTrack), this.noteRepeat.getVelocityRampStr (selectedTrack), this.isKnobTouched[5], -1);
-
-        message.send ();
     }
 
 

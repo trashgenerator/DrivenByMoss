@@ -259,14 +259,6 @@ public abstract class AbstractModel implements IModel
 
     /** {@inheritDoc} */
     @Override
-    public void createClip (final ISlot slot, final int clipLength)
-    {
-        slot.create ((int) (clipLength < 2 ? Math.pow (2, clipLength) : Math.pow (2, clipLength - 2.0) * this.transport.getQuartersPerMeasure ()));
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
     public boolean hasRecordingState ()
     {
         return this.transport.isRecording () || this.transport.isLauncherOverdub () || this.currentTrackBank.isClipRecording ();

@@ -10,7 +10,6 @@ import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.observer.IValueObserver;
 
 import com.bitwig.extension.controller.api.ClipLauncherSlot;
-import com.bitwig.extension.controller.api.ClipLauncherSlotBank;
 import com.bitwig.extension.controller.api.ColorValue;
 
 
@@ -21,26 +20,22 @@ import com.bitwig.extension.controller.api.ColorValue;
  */
 public class SlotImpl extends AbstractItemImpl implements ISlot
 {
-    private final ITrack               track;
-    private final ClipLauncherSlot     slot;
-    private final ClipLauncherSlotBank csBank;
+    private final ITrack           track;
+    private final ClipLauncherSlot slot;
 
 
     /**
      * Constructor.
      *
      * @param track The track which contains the slot
-     * @param csBank The slot bank. Required since some functions are not avaiable on the slot but
-     *            on the bank
      * @param slot The slot
      * @param index The index of the slot
      */
-    public SlotImpl (final ITrack track, final ClipLauncherSlotBank csBank, final ClipLauncherSlot slot, final int index)
+    public SlotImpl (final ITrack track, final ClipLauncherSlot slot, final int index)
     {
         super (index);
 
         this.track = track;
-        this.csBank = csBank;
         this.slot = slot;
 
         slot.exists ().markInterested ();
@@ -203,7 +198,8 @@ public class SlotImpl extends AbstractItemImpl implements ISlot
     @Override
     public void select ()
     {
-        this.csBank.select (this.getIndex ());
+        this.slot.select ();
+        this.slot.showInEditor ();
     }
 
 
@@ -219,7 +215,7 @@ public class SlotImpl extends AbstractItemImpl implements ISlot
     @Override
     public void record ()
     {
-        this.csBank.record (this.getIndex ());
+        this.slot.record ();
     }
 
 
@@ -227,7 +223,7 @@ public class SlotImpl extends AbstractItemImpl implements ISlot
     @Override
     public void create (final int length)
     {
-        this.csBank.createEmptyClip (this.getIndex (), length);
+        this.slot.createEmptyClip (length);
     }
 
 
@@ -243,7 +239,7 @@ public class SlotImpl extends AbstractItemImpl implements ISlot
     @Override
     public void duplicate ()
     {
-        this.csBank.duplicateClip (this.getIndex ());
+        this.slot.duplicateClip ();
     }
 
 

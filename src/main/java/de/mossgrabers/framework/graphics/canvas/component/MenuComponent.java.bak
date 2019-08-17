@@ -77,7 +77,7 @@ public class MenuComponent implements IComponent
 
         // TODO should be the same, SEPARATE_COLOR drawing must be changed to be drawn in its own
         // box
-        final double menuHeight = 2 * dimensions.getMenuHeight ();
+        double menuHeight = 2 * dimensions.getMenuHeight ();
         final double trackRowTop = this.footer.getLayout () == LabelLayout.SEPARATE_COLOR ? height - trackRowHeight - unit - dimensions.getSeparatorSize () : height - menuHeight;
         final double h = this.footer.getLayout () == LabelLayout.SEPARATE_COLOR ? height : menuHeight;
 

@@ -5,26 +5,24 @@
 package de.mossgrabers.controller.push.controller;
 
 import de.mossgrabers.controller.push.PushConfiguration;
+import de.mossgrabers.framework.controller.display.AbstractTextDisplay;
 import de.mossgrabers.framework.controller.display.Format;
-import de.mossgrabers.framework.controller.display.GraphicDisplay;
+import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IHost;
 import de.mossgrabers.framework.daw.midi.IMidiOutput;
-import de.mossgrabers.framework.graphics.DefaultGraphicsDimensions;
-import de.mossgrabers.framework.graphics.IBitmap;
-import de.mossgrabers.framework.graphics.IGraphicsDimensions;
-import de.mossgrabers.framework.graphics.display.VirtualDisplay;
 import de.mossgrabers.framework.utils.Pair;
+import de.mossgrabers.framework.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * The display of Push 1 and Push 2.
+ * The display of Push 1.
  *
  * @author J&uuml;rgen Mo&szlig;graber
  */
-public class PushDisplay extends GraphicDisplay
+public class Push1Display extends AbstractTextDisplay
 {
     /** Push character codes for value bars - a dash. */
     public static final String     BARS_NON      = Character.toString ((char) 6);
@@ -43,38 +41,6 @@ public class PushDisplay extends GraphicDisplay
     /** Push character for a right arrow. */
     public static final String     RIGHT_ARROW   = Character.toString ((char) 30);
 
-    private static final String [] SPACES        =
-    {
-        "",
-        " ",
-        "  ",
-        "   ",
-        "    ",
-        "     ",
-        "      ",
-        "       ",
-        "        ",
-        "         ",
-        "          ",
-        "           ",
-        "            ",
-        "             "
-    };
-
-    private static final String [] DASHES        =
-    {
-        "",
-        BARS_NON,
-        BARS_NON + BARS_NON,
-        BARS_NON + BARS_NON + BARS_NON,
-        BARS_NON + BARS_NON + BARS_NON + BARS_NON,
-        BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON,
-        BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON,
-        BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON,
-        BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON,
-        BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON + BARS_NON
-    };
-
     private static final String [] SYSEX_MESSAGE =
     {
         "F0 47 7F 15 18 00 45 00 ",
@@ -84,9 +50,6 @@ public class PushDisplay extends GraphicDisplay
     };
 
     private int                    maxParameterValue;
-    private boolean                isPush2;
-
-    private final PushUsbDisplay   usbDisplay;
 
 
     /**
@@ -94,21 +57,15 @@ public class PushDisplay extends GraphicDisplay
      * cells (0-7).
      *
      * @param host The host
-     * @param isPush2 True if Push 2
      * @param maxParameterValue The maximum parameter value (upper bound)
      * @param output The midi output
      * @param configuration The Push configuration
      */
-    public PushDisplay (final IHost host, final boolean isPush2, final int maxParameterValue, final IMidiOutput output, final PushConfiguration configuration)
+    public Push1Display (final IHost host, final int maxParameterValue, final IMidiOutput output, final PushConfiguration configuration)
     {
         super (host, output, 4 /* No of rows */, 8 /* No of cells */, 68 /* No of characters */);
 
         this.maxParameterValue = maxParameterValue;
-        this.isPush2 = isPush2;
-
-        final IGraphicsDimensions dimensions = new DefaultGraphicsDimensions (960, 160, maxParameterValue);
-        this.virtualDisplay = this.isPush2 ? new VirtualDisplay (host, this.model, configuration, dimensions, "Push 2 Display") : null;
-        this.usbDisplay = this.isPush2 ? new PushUsbDisplay (host) : null;
     }
 
 
@@ -116,21 +73,13 @@ public class PushDisplay extends GraphicDisplay
     @Override
     public void shutdown ()
     {
-        if (this.isPush2)
-        {
-            this.model.setMessage (3, "Please start " + this.host.getName () + " to play...").send ();
-            if (this.usbDisplay != null)
-                this.usbDisplay.shutdown ();
-            this.model.shutdown ();
-        }
-        else
-            this.clear ().setBlock (1, 1, "     Please start").setBlock (1, 2, this.host.getName () + " to play...").allDone ().flush ();
+        this.clear ().setBlock (1, 1, "     Please start").setBlock (1, 2, this.host.getName () + " to play...").allDone ().flush ();
     }
 
 
     /** {@inheritDoc} */
     @Override
-    public PushDisplay clearCell (final int row, final int cell)
+    public ITextDisplay clearCell (final int row, final int cell)
     {
         this.cells[row * 8 + cell] = cell % 2 == 0 ? "         " : "        ";
         return this;
@@ -139,17 +88,17 @@ public class PushDisplay extends GraphicDisplay
 
     /** {@inheritDoc} */
     @Override
-    public PushDisplay setBlock (final int row, final int block, final String value)
+    public ITextDisplay setBlock (final int row, final int block, final String value)
     {
         final int cell = 2 * block;
         if (value.length () > 9)
         {
             this.cells[row * 8 + cell] = value.substring (0, 9);
-            this.cells[row * 8 + cell + 1] = pad (value.substring (9), 8, " ");
+            this.cells[row * 8 + cell + 1] = StringUtils.pad (value.substring (9), 8, ' ');
         }
         else
         {
-            this.cells[row * 8 + cell] = pad (value, 9, " ");
+            this.cells[row * 8 + cell] = StringUtils.pad (value, 9, ' ');
             this.clearCell (row, cell + 1);
         }
         return this;
@@ -158,7 +107,7 @@ public class PushDisplay extends GraphicDisplay
 
     /** {@inheritDoc} */
     @Override
-    public PushDisplay setCell (final int row, final int cell, final int value, final Format format)
+    public ITextDisplay setCell (final int row, final int cell, final int value, final Format format)
     {
         return this.setCell (row, cell, formatStr (value, format, this.maxParameterValue));
     }
@@ -166,9 +115,9 @@ public class PushDisplay extends GraphicDisplay
 
     /** {@inheritDoc} */
     @Override
-    public PushDisplay setCell (final int row, final int cell, final String value)
+    public ITextDisplay setCell (final int row, final int cell, final String value)
     {
-        this.cells[row * 8 + cell] = pad (value, 8, " ") + (cell % 2 == 0 ? " " : "");
+        this.cells[row * 8 + cell] = StringUtils.pad (value, 8, ' ') + (cell % 2 == 0 ? " " : "");
         return this;
     }
 
@@ -180,18 +129,7 @@ public class PushDisplay extends GraphicDisplay
         final int [] array = new int [text.length ()];
         for (int i = 0; i < text.length (); i++)
             array[i] = text.charAt (i);
-        this.output.sendSysex (PushDisplay.SYSEX_MESSAGE[row] + toHexStr (array) + "F7");
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    protected void notifyOnDisplay (final String message)
-    {
-        if (this.isPush2)
-            this.model.setNotificationMessage (message);
-        else
-            super.notifyOnDisplay (message);
+        this.output.sendSysex (Push1Display.SYSEX_MESSAGE[row] + toHexStr (array) + "F7");
     }
 
 
@@ -214,10 +152,10 @@ public class PushDisplay extends GraphicDisplay
         final int noOfBars = (int) Math.round (16.0 * value / maxParam);
         final StringBuilder n = new StringBuilder ();
         for (int j = 0; j < noOfBars / 2; j++)
-            n.append (PushDisplay.BARS_TWO);
+            n.append (Push1Display.BARS_TWO);
         if (noOfBars % 2 == 1)
-            n.append (PushDisplay.BARS_ONE);
-        return pad (n.toString (), 8, PushDisplay.BARS_NON);
+            n.append (Push1Display.BARS_ONE);
+        return StringUtils.pad (n.toString (), 8, Push1Display.BARS_NON.charAt (0));
     }
 
 
@@ -225,37 +163,19 @@ public class PushDisplay extends GraphicDisplay
     {
         final int middle = maxParam / 2;
         if (pan == middle)
-            return PushDisplay.NON_4 + PushDisplay.NON_4;
+            return Push1Display.NON_4 + Push1Display.NON_4;
         final boolean isLeft = pan < middle;
         final int pos = isLeft ? middle - pan : pan - middle;
         final int noOfBars = 16 * pos / maxParam;
         StringBuilder n = new StringBuilder ();
         for (int i = 0; i < noOfBars / 2; i++)
             n.append (BARS_TWO);
-        if (noOfBars % 2 == 1)
-            n.append (isLeft ? PushDisplay.BARS_ONE_L : PushDisplay.BARS_ONE);
-        n = new StringBuilder (PushDisplay.NON_4).append (pad (n.toString (), 4, PushDisplay.BARS_NON));
+        if (pan >= maxParam - 1)
+            n.append (BARS_TWO);
+        else if (noOfBars % 2 == 1)
+            n.append (isLeft ? Push1Display.BARS_ONE_L : Push1Display.BARS_ONE);
+        n = new StringBuilder (Push1Display.NON_4).append (StringUtils.pad (n.toString (), 4, Push1Display.BARS_NON.charAt (0)));
         return isLeft ? n.reverse ().toString () : n.toString ();
-    }
-
-
-    /**
-     * Pad the given text with the given character until it reaches the given length.
-     *
-     * @param str The text to pad
-     * @param length The maximum length
-     * @param character The character to use for padding
-     * @return The padded text
-     */
-    public static String pad (final String str, final int length, final String character)
-    {
-        final String text = str == null ? "" : str;
-        final int diff = length - text.length ();
-        if (diff < 0)
-            return text.substring (0, length);
-        if (diff > 0)
-            return text + (" ".equals (character) ? PushDisplay.SPACES[diff] : PushDisplay.DASHES[diff]);
-        return text;
     }
 
 
@@ -292,14 +212,5 @@ public class PushDisplay extends GraphicDisplay
             sysex.append (v).append (' ');
         }
         return sysex.toString ();
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    protected void send (final IBitmap image)
-    {
-        if (this.usbDisplay != null)
-            this.usbDisplay.send (this.virtualDisplay.getImage ());
     }
 }

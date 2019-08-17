@@ -256,15 +256,6 @@ public interface IModel
 
 
     /**
-     * Creates a new clip at the given track and slot index.
-     *
-     * @param slot The slot in which to create a clip
-     * @param clipLength The length of the new clip as read from the configuration
-     */
-    void createClip (ISlot slot, int clipLength);
-
-
-    /**
      * Returns true if session recording is enabled, a clip is recording or overdub is enabled.
      *
      * @return True if recording

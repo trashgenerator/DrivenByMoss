@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author J&uuml;rgen Mo&szlig;graber
  */
-public class VirtualDisplay
+public class DisplayCanvas
 {
     private final DisplayModel           model;
     private final IBitmap                image;
@@ -40,7 +40,7 @@ public class VirtualDisplay
      * @param dimensions The pre-calculated grid dimension
      * @param windowTitle The title for the preview window
      */
-    public VirtualDisplay (final IHost host, final DisplayModel model, final IGraphicsConfiguration configuration, final IGraphicsDimensions dimensions, final String windowTitle)
+    public DisplayCanvas (final IHost host, final DisplayModel model, final IGraphicsConfiguration configuration, final IGraphicsDimensions dimensions, final String windowTitle)
     {
         this.model = model;
         this.configuration = configuration;
@@ -51,7 +51,7 @@ public class VirtualDisplay
         this.image = host.createBitmap (dimensions.getWidth (), dimensions.getHeight ());
         this.image.setDisplayWindowTitle (windowTitle);
 
-        this.model.addGridElementChangeListener (this::drawGrid);
+        this.model.addGridElementChangeListener (this::render);
     }
 
 
@@ -69,7 +69,7 @@ public class VirtualDisplay
     /**
      * Draws the N grid elements of the grid.
      */
-    private void drawGrid ()
+    private void render ()
     {
         this.image.render (gc -> {
             final int width = this.dimensions.getWidth ();

@@ -159,6 +159,15 @@ public interface ITrack extends IChannel
 
 
     /**
+     * Creates a new clip at the given track and slot index (or greater).
+     * 
+     * @param slotIndex The index of the slot
+     * @param lengthInBeats The length of the new clip as read from the configuration
+     */
+    void createClip (int slotIndex, int lengthInBeats);
+
+
+    /**
      * Returns true if a clip is playing on the track.
      *
      * @return True if a clip is playing on the track.

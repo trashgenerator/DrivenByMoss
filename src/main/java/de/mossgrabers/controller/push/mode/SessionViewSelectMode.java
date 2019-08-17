@@ -5,10 +5,10 @@
 package de.mossgrabers.controller.push.mode;
 
 import de.mossgrabers.controller.push.PushConfiguration;
+import de.mossgrabers.controller.push.controller.Push1Display;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
-import de.mossgrabers.controller.push.controller.PushDisplay;
 import de.mossgrabers.framework.controller.color.ColorManager;
-import de.mossgrabers.framework.controller.display.Display;
+import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.graphics.display.DisplayModel;
 import de.mossgrabers.framework.mode.AbstractMode;
@@ -98,30 +98,27 @@ public class SessionViewSelectMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay1 ()
+    public void updateDisplay1 (final ITextDisplay display)
     {
-        final Display d = this.surface.getDisplay ();
         final ViewManager viewManager = this.surface.getViewManager ();
-        d.clear ().setBlock (1, 0, "Session view:");
+        display.setBlock (1, 0, "Session view:");
         for (int i = 0; i < VIEWS.length; i++)
         {
             if (VIEWS[i] != null)
-                d.setCell (3, i, (this.isSelected (viewManager, i) ? PushDisplay.SELECT_ARROW : "") + VIEW_NAMES[i]);
+                display.setCell (3, i, (this.isSelected (viewManager, i) ? Push1Display.SELECT_ARROW : "") + VIEW_NAMES[i]);
         }
-        d.setBlock (1, 3, "Session mode:");
+        display.setBlock (1, 3, "Session mode:");
         final boolean isOn = this.surface.getModeManager ().isActiveMode (Modes.SESSION);
-        d.setCell (3, 6, "Markers");
-        d.setCell (3, 7, (isOn ? PushDisplay.SELECT_ARROW : "") + " Clips");
-        d.allDone ();
+        display.setCell (3, 6, "Markers");
+        display.setCell (3, 7, (isOn ? Push1Display.SELECT_ARROW : "") + " Clips");
     }
 
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay2 ()
+    public void updateDisplay2 (final DisplayModel message)
     {
         final ViewManager viewManager = this.surface.getViewManager ();
-        final DisplayModel message = this.surface.getDisplay ().getModel ();
         for (int i = 0; i < VIEWS.length; i++)
         {
             final boolean isMenuBottomSelected = VIEWS[i] != null && this.isSelected (viewManager, i);
@@ -131,7 +128,6 @@ public class SessionViewSelectMode extends BaseMode
         message.addOptionElement ("", "", false, "", "", false, false);
         message.addOptionElement ("", "", false, "Session mode", "Markers", false, false);
         message.addOptionElement ("", "", false, "", "Clips", isOn, false);
-        message.send ();
     }
 
 

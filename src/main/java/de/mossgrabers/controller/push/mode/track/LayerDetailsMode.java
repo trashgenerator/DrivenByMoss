@@ -8,7 +8,7 @@ import de.mossgrabers.controller.push.controller.PushColors;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
 import de.mossgrabers.controller.push.mode.BaseMode;
 import de.mossgrabers.controller.push.view.ColorView;
-import de.mossgrabers.framework.controller.display.Display;
+import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IChannelBank;
 import de.mossgrabers.framework.daw.IDrumPadBank;
 import de.mossgrabers.framework.daw.IModel;
@@ -149,9 +149,9 @@ public class LayerDetailsMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay1 ()
+    public void updateDisplay1 (final ITextDisplay display)
     {
-        final Display d = this.surface.getDisplay ().clear ();
+        final ITextDisplay d = this.surface.getDisplay ().clear ();
         final IChannel deviceChain = this.model.getCursorDevice ().getLayerOrDrumPadBank ().getSelectedItem ();
         if (deviceChain == null)
             d.setRow (1, "                     Please selecta layer...                        ").allDone ();
@@ -181,9 +181,8 @@ public class LayerDetailsMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay2 ()
+    public void updateDisplay2 (final DisplayModel message)
     {
-        final DisplayModel message = this.surface.getDisplay ().getModel ();
         final IChannel deviceChain = this.model.getCursorDevice ().getLayerOrDrumPadBank ().getSelectedItem ();
         if (deviceChain == null)
             message.setMessage (3, "Please select a layer...");
@@ -198,7 +197,6 @@ public class LayerDetailsMode extends BaseMode
             message.addOptionElement ("", "Clear Mute", false, "", "", false, false);
             message.addOptionElement ("", "Clear Solo", false, "", "Select Color", false, false);
         }
-        message.send ();
     }
 
 

@@ -127,7 +127,7 @@ public class DisplayModel
         this.info = new ModelInfo (this.notificationMessage.get (), this.columns);
         this.columns.clear ();
         for (final GridChangeListener listener: this.listeners)
-            listener.gridHasChanged ();
+            listener.render ();
     }
 
 

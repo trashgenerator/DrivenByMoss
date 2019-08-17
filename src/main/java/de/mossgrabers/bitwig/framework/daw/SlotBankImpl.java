@@ -62,6 +62,6 @@ public class SlotBankImpl extends AbstractBankImpl<ClipLauncherSlotBank, ISlot> 
     protected void initItems ()
     {
         for (int i = 0; i < this.pageSize; i++)
-            this.items.add (new SlotImpl (this.track, this.bank, this.bank.getItemAt (i), i));
+            this.items.add (new SlotImpl (this.track, this.bank.getItemAt (i), i));
     }
 }

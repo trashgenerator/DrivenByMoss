@@ -4,9 +4,9 @@
 
 package de.mossgrabers.controller.push.mode;
 
+import de.mossgrabers.controller.push.controller.Push1Display;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
-import de.mossgrabers.controller.push.controller.PushDisplay;
-import de.mossgrabers.framework.controller.display.Display;
+import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IMarkerBank;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.data.IMarker;
@@ -99,9 +99,9 @@ public class MarkersMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay1 ()
+    public void updateDisplay1 (final ITextDisplay display)
     {
-        final Display d = this.surface.getDisplay ().clear ();
+        final ITextDisplay d = this.surface.getDisplay ().clear ();
 
         final boolean canEditMarkers = this.model.getHost ().canEditMarkers ();
         final IMarkerBank markerBank = this.model.getMarkerBank ();
@@ -113,7 +113,7 @@ public class MarkersMode extends BaseMode
             if (canEditMarkers)
             {
                 final boolean isMenuTopSelected = i == 6 && !this.actionModeLaunch || i == 7 && this.actionModeLaunch;
-                d.setCell (0, i, (isMenuTopSelected ? PushDisplay.SELECT_ARROW : "") + EDIT_MENU[i]);
+                d.setCell (0, i, (isMenuTopSelected ? Push1Display.SELECT_ARROW : "") + EDIT_MENU[i]);
             }
 
             final IMarker marker = markerBank.getItem (i);
@@ -130,9 +130,8 @@ public class MarkersMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay2 ()
+    public void updateDisplay2 (final DisplayModel message)
     {
-        final DisplayModel message = this.surface.getDisplay ().getModel ();
         final boolean canEditMarkers = this.model.getHost ().canEditMarkers ();
         final IMarkerBank markerBank = this.model.getMarkerBank ();
         for (int i = 0; i < 8; i++)
@@ -144,7 +143,6 @@ public class MarkersMode extends BaseMode
             final boolean isMenuTopSelected = i == 6 && !this.actionModeLaunch || i == 7 && this.actionModeLaunch;
             message.addOptionElement (headerTopName, menuTopName, isMenuTopSelected, null, headerBottomName, marker.doesExist () ? marker.getName (12) : "", false, marker.getColor (), false);
         }
-        message.send ();
     }
 
 

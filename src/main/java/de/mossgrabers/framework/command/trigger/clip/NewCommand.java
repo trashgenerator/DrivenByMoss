@@ -73,12 +73,19 @@ public class NewCommand<S extends IControlSurface<C>, C extends Configuration> e
             return;
         }
 
-        this.model.createClip (slot, this.getClipLength ());
+        track.createClip (slot.getIndex (), this.getNewClipLenghthInBeats (this.model.getTransport ().getQuartersPerMeasure ()));
         if (slotIndex != slot.getIndex ())
             slot.select ();
         slot.launch ();
         if (enableOverdub)
             this.model.getTransport ().setLauncherOverdub (true);
+    }
+
+
+    private int getNewClipLenghthInBeats (final int quartersPerMeasure)
+    {
+        final int length = getClipLength ();
+        return (int) (length < 2 ? Math.pow (2, length) : Math.pow (2, length - 2.0) * quartersPerMeasure);
     }
 
 

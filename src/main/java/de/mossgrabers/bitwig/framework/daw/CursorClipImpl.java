@@ -6,6 +6,7 @@ package de.mossgrabers.bitwig.framework.daw;
 
 import de.mossgrabers.framework.controller.IValueChanger;
 import de.mossgrabers.framework.daw.INoteClip;
+import de.mossgrabers.framework.daw.constants.TransportConstants;
 
 import com.bitwig.extension.controller.api.Clip;
 import com.bitwig.extension.controller.api.Clip.StepInfo;
@@ -392,12 +393,6 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public void updateStepDuration (final int step, final int row, final double duration)
-    {
-        this.getClip ().updateStepDuration (step, row, duration);
-    }
-
-
     public double getStepDuration (final int step, final int row)
     {
         final Clip clip = this.getClip ();
@@ -406,12 +401,30 @@ public class CursorClipImpl implements INoteClip
     }
 
 
-    public void changeStepDuration (final int step, final int row, final int control, final double fractionValue)
+    /** {@inheritDoc} */
+    @Override
+    public void updateStepDuration (final int step, final int row, final double duration)
+    {
+        this.getClip ().updateStepDuration (step, row, duration);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void changeStepDuration (final int step, final int row, final int control)
     {
         final Clip clip = this.getClip ();
         final StepInfo info = clip.getStepInfo (step, row);
-        final double duration = info.getDuration () + this.valueChanger.calcKnobSpeed (control, fractionValue);
-        clip.updateStepDuration (step, row, Math.max (0, duration));
+        final double frac = this.valueChanger.isSlow () ? TransportConstants.INC_FRACTION_TIME_SLOW / 16.0 : TransportConstants.INC_FRACTION_TIME_SLOW;
+        clip.updateStepDuration (step, row, Math.max (0, info.getDuration () + this.valueChanger.calcKnobSpeed (control, frac)));
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public double getStepVelocity (final int step, final int row)
+    {
+        return this.getClip ().getStepInfo (step, row).getVelocity ();
     }
 
 
@@ -423,20 +436,149 @@ public class CursorClipImpl implements INoteClip
     }
 
 
-    public double getStepVelocity (final int step, final int row)
-    {
-        final Clip clip = this.getClip ();
-        final StepInfo info = clip.getStepInfo (step, row);
-        return info.getVelocity ();
-    }
-
-
+    /** {@inheritDoc} */
+    @Override
     public void changeStepVelocity (final int step, final int row, final int control)
     {
         final Clip clip = this.getClip ();
         final StepInfo info = clip.getStepInfo (step, row);
-        final double velocity = info.getVelocity () + this.valueChanger.calcKnobSpeed (control, 0.01);
-        clip.updateStepVelocity (step, row, Math.min (1, Math.max (0, velocity)));
+        final double velocity = info.getVelocity () + this.valueChanger.toNormalizedValue ((int) this.valueChanger.calcKnobSpeed (control));
+        clip.updateStepVelocity (step, row, Math.min (1.0, Math.max (0, velocity)));
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public double getStepReleaseVelocity (final int step, final int row)
+    {
+        return this.getClip ().getStepInfo (step, row).getReleaseVelocity ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void updateStepReleaseVelocity (final int step, final int row, final double releaseVelocity)
+    {
+        this.getClip ().updateStepReleaseVelocity (step, row, releaseVelocity);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void changeStepReleaseVelocity (final int step, final int row, final int control)
+    {
+        final Clip clip = this.getClip ();
+        final StepInfo info = clip.getStepInfo (step, row);
+        final double velocity = info.getReleaseVelocity () + this.valueChanger.toNormalizedValue ((int) this.valueChanger.calcKnobSpeed (control));
+        clip.updateStepReleaseVelocity (step, row, Math.min (1.0, Math.max (0, velocity)));
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public double getStepPressure (final int step, final int row)
+    {
+        return this.getClip ().getStepInfo (step, row).getPressure ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void updateStepPressure (final int step, final int row, final double velocity)
+    {
+        this.getClip ().updateStepPressure (step, row, velocity);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void changeStepPressure (final int step, final int row, final int control)
+    {
+        final Clip clip = this.getClip ();
+        final StepInfo info = clip.getStepInfo (step, row);
+        final double pressure = info.getPressure () + this.valueChanger.toNormalizedValue ((int) this.valueChanger.calcKnobSpeed (control));
+        clip.updateStepPressure (step, row, Math.min (1.0, Math.max (0, pressure)));
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public double getStepTimbre (final int step, final int row)
+    {
+        return this.getClip ().getStepInfo (step, row).getTimbre ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void updateStepTimbre (final int step, final int row, final double timbre)
+    {
+        this.getClip ().updateStepTimbre (step, row, timbre);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void changeStepTimbre (final int step, final int row, final int control)
+    {
+        final Clip clip = this.getClip ();
+        final StepInfo info = clip.getStepInfo (step, row);
+        final double timbre = info.getTimbre () + 2.0 * this.valueChanger.toNormalizedValue ((int) this.valueChanger.calcKnobSpeed (control));
+        clip.updateStepTimbre (step, row, Math.min (1.0, Math.max (-1.0, timbre)));
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public double getStepPan (final int step, final int row)
+    {
+        return this.getClip ().getStepInfo (step, row).getPan ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void updateStepPan (final int step, final int row, final double pan)
+    {
+        this.getClip ().updateStepPan (step, row, pan);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void changeStepPan (final int step, final int row, final int control)
+    {
+        final Clip clip = this.getClip ();
+        final StepInfo info = clip.getStepInfo (step, row);
+        final double pan = info.getPan () + 2.0 * this.valueChanger.toNormalizedValue ((int) this.valueChanger.calcKnobSpeed (control));
+        clip.updateStepPan (step, row, Math.min (1.0, Math.max (-1.0, pan)));
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public double getStepTranspose (final int step, final int row)
+    {
+        return this.getClip ().getStepInfo (step, row).getTranspose ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void updateStepTranspose (final int step, final int row, final double transpose)
+    {
+        this.getClip ().updateStepTranspose (step, row, transpose);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void changeStepTranspose (final int step, final int row, final int control)
+    {
+        final Clip clip = this.getClip ();
+        final StepInfo info = clip.getStepInfo (step, row);
+        final double transpose = info.getTranspose () + this.valueChanger.toNormalizedValue ((int) this.valueChanger.calcKnobSpeed (control));
+        clip.updateStepTranspose (step, row, Math.min (24.0, Math.max (-24.0, transpose)));
     }
 
 

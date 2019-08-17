@@ -346,6 +346,14 @@ public class TrackImpl extends ChannelImpl implements ITrack
     }
 
 
+    /** {@inheritDoc} */
+    @Override
+    public void createClip (final int slotIndex, final int lengthInBeats)
+    {
+        this.track.createNewClip (slotIndex, lengthInBeats);
+    }
+
+
     /**
      * Add a note observer.
      *
