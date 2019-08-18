@@ -151,31 +151,30 @@ public class LayerDetailsMode extends BaseMode
     @Override
     public void updateDisplay1 (final ITextDisplay display)
     {
-        final ITextDisplay d = this.surface.getDisplay ().clear ();
         final IChannel deviceChain = this.model.getCursorDevice ().getLayerOrDrumPadBank ().getSelectedItem ();
         if (deviceChain == null)
-            d.setRow (1, "                     Please selecta layer...                        ").allDone ();
-        else
         {
-            final String layerName = deviceChain.getName ();
-            d.setBlock (0, 0, "Layer: " + layerName);
-            if (layerName.length () > 10)
-                d.setBlock (0, 1, layerName.substring (10));
-            d.setCell (2, 0, "Active").setCell (3, 0, deviceChain.isActivated () ? "On" : "Off");
-            d.setCell (2, 1, "");
-            d.setCell (3, 1, "");
-            d.setCell (2, 2, "Mute").setCell (3, 2, deviceChain.isMute () ? "On" : "Off");
-            d.setCell (2, 3, "Solo").setCell (3, 3, deviceChain.isSolo () ? "On" : "Off");
-            d.setCell (2, 4, "");
-            d.setCell (3, 4, "");
-            d.setCell (2, 5, "");
-            d.setCell (3, 5, "");
-            d.setCell (0, 6, "Clr Mute");
-            d.setCell (0, 7, "Clr Solo");
-            d.setCell (2, 7, "Select");
-            d.setCell (3, 7, "Color");
-            d.allDone ();
+            display.setRow (1, "                     Please selecta layer...                        ").allDone ();
+            return;
         }
+
+        final String layerName = deviceChain.getName ();
+        display.setBlock (0, 0, "Layer: " + layerName);
+        if (layerName.length () > 10)
+            display.setBlock (0, 1, layerName.substring (10));
+        display.setCell (2, 0, "Active").setCell (3, 0, deviceChain.isActivated () ? "On" : "Off");
+        display.setCell (2, 1, "");
+        display.setCell (3, 1, "");
+        display.setCell (2, 2, "Mute").setCell (3, 2, deviceChain.isMute () ? "On" : "Off");
+        display.setCell (2, 3, "Solo").setCell (3, 3, deviceChain.isSolo () ? "On" : "Off");
+        display.setCell (2, 4, "");
+        display.setCell (3, 4, "");
+        display.setCell (2, 5, "");
+        display.setCell (3, 5, "");
+        display.setCell (0, 6, "Clr Mute");
+        display.setCell (0, 7, "Clr Solo");
+        display.setCell (2, 7, "Select");
+        display.setCell (3, 7, "Color");
     }
 
 

@@ -4,6 +4,7 @@
 
 package de.mossgrabers.framework.daw;
 
+import de.mossgrabers.framework.daw.constants.RecordQuantization;
 import de.mossgrabers.framework.observer.ObserverManagement;
 
 
@@ -254,6 +255,36 @@ public interface IApplication extends ObserverManagement
      * Increase the track height.
      */
     void incTrackHeight ();
+
+
+    /**
+     * Test if record quantization for note lengths is enabled.
+     *
+     * @return True if enabled
+     */
+    boolean isRecordQuantizationNoteLength ();
+
+
+    /**
+     * Toggle record quantization note length enablement.
+     */
+    void toggleRecordQuantizationNoteLength ();
+
+
+    /**
+     * Get the record quantization grid.
+     *
+     * @return The record quantization grid resolution
+     */
+    RecordQuantization getRecordQuantizationGrid ();
+
+
+    /**
+     * Set the record quantization grid.
+     *
+     * @param recordQuantization The record quantization grid resolution
+     */
+    void setRecordQuantizationGrid (RecordQuantization recordQuantization);
 
 
     /**

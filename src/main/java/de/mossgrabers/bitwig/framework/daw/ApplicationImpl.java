@@ -5,6 +5,7 @@
 package de.mossgrabers.bitwig.framework.daw;
 
 import de.mossgrabers.framework.daw.IApplication;
+import de.mossgrabers.framework.daw.constants.RecordQuantization;
 
 import com.bitwig.extension.controller.api.Action;
 import com.bitwig.extension.controller.api.ActionCategory;
@@ -32,6 +33,9 @@ public class ApplicationImpl implements IApplication
 
         this.application.hasActiveEngine ().markInterested ();
         this.application.panelLayout ().markInterested ();
+        this.application.recordQuantizationGrid ().markInterested ();
+        this.application.recordQuantizeNoteLength ().markInterested ();
+
     }
 
 
@@ -41,6 +45,8 @@ public class ApplicationImpl implements IApplication
     {
         this.application.hasActiveEngine ().setIsSubscribed (enable);
         this.application.panelLayout ().setIsSubscribed (enable);
+        this.application.recordQuantizationGrid ().setIsSubscribed (enable);
+        this.application.recordQuantizeNoteLength ().setIsSubscribed (enable);
     }
 
 
@@ -329,6 +335,38 @@ public class ApplicationImpl implements IApplication
     {
         // No track height increase method available
         this.invokeAction ("toggle_double_or_single_row_track_height");
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isRecordQuantizationNoteLength ()
+    {
+        return this.application.recordQuantizeNoteLength ().get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void toggleRecordQuantizationNoteLength ()
+    {
+        this.application.recordQuantizeNoteLength ().toggle ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public RecordQuantization getRecordQuantizationGrid ()
+    {
+        return RecordQuantization.getByValue (this.application.recordQuantizationGrid ().get ());
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void setRecordQuantizationGrid (final RecordQuantization recordQuantization)
+    {
+        this.application.recordQuantizationGrid ().set (recordQuantization.getValue ());
     }
 
 

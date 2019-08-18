@@ -130,27 +130,23 @@ public class ScalesMode extends BaseMode
     @Override
     public void updateDisplay1 (final ITextDisplay display)
     {
-        final ITextDisplay d = this.surface.getDisplay ().clear ();
-
         final int selIndex = this.scales.getScale ().ordinal ();
         int pos = 0;
         for (final Pair<String, Boolean> p: Push1Display.createMenuList (4, Scale.getNames (), selIndex))
         {
-            d.setBlock (pos, 0, (p.getValue ().booleanValue () ? Push1Display.SELECT_ARROW : " ") + p.getKey ());
+            display.setBlock (pos, 0, (p.getValue ().booleanValue () ? Push1Display.SELECT_ARROW : " ") + p.getKey ());
             pos++;
         }
 
-        d.setBlock (0, 3, this.scales.getRangeText ());
+        display.setBlock (0, 3, this.scales.getRangeText ());
 
         final int offset = this.scales.getScaleOffset ();
         for (int i = 0; i < 6; i++)
         {
-            d.setCell (2, i + 1, "  " + (offset == i ? Push1Display.SELECT_ARROW : " ") + Scales.BASES[i]);
-            d.setCell (3, i + 1, "  " + (offset == 6 + i ? Push1Display.SELECT_ARROW : " ") + Scales.BASES[6 + i]);
+            display.setCell (2, i + 1, "  " + (offset == i ? Push1Display.SELECT_ARROW : " ") + Scales.BASES[i]);
+            display.setCell (3, i + 1, "  " + (offset == 6 + i ? Push1Display.SELECT_ARROW : " ") + Scales.BASES[6 + i]);
         }
-        d.setCell (3, 7, this.scales.isChromatic () ? "Chromatc" : "In Key");
-
-        d.allDone ();
+        display.setCell (3, 7, this.scales.isChromatic () ? "Chromatc" : "In Key");
     }
 
 

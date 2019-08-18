@@ -156,30 +156,30 @@ public class TrackDetailsMode extends BaseMode
     @Override
     public void updateDisplay1 (final ITextDisplay display)
     {
-        final ITextDisplay d = this.surface.getDisplay ().clearRow (0).clearRow (1);
         final ITrack deviceChain = this.getSelectedTrack ();
         if (deviceChain == null)
-            d.setRow (1, "                     Please selecta track...                        ").done (0).done (2);
-        else
         {
-            final String trackName = deviceChain.getName ();
-            d.setBlock (0, 0, "Track: " + trackName);
-            if (trackName.length () > 10)
-                d.setBlock (0, 1, trackName.substring (10));
-            d.setCell (2, 0, "Active").setCell (3, 0, deviceChain.isActivated () ? "On" : "Off");
-            d.setCell (2, 1, "Rec Arm");
-            d.setCell (3, 1, deviceChain.isRecArm () ? "On" : "Off");
-            d.setCell (2, 2, "Mute").setCell (3, 2, deviceChain.isMute () ? "On" : "Off");
-            d.setCell (2, 3, "Solo").setCell (3, 3, deviceChain.isSolo () ? "On" : "Off");
-            d.setCell (2, 4, "Monitor");
-            d.setCell (3, 4, deviceChain.isMonitor () ? "On" : "Off");
-            d.setCell (2, 5, "Auto Monitor");
-            d.setCell (3, 5, deviceChain.isAutoMonitor () ? "On" : "Off");
-            final boolean hasPinning = this.model.getHost ().hasPinning ();
-            d.setCell (2, 6, hasPinning ? "Pin Trck" : "");
-            d.setCell (3, 6, hasPinning ? this.model.isCursorTrackPinned () ? "On" : "Off" : "");
-            d.setCell (2, 7, "Select").setCell (3, 7, "Color").done (0).done (1).done (2).done (3);
+            display.setRow (1, "                     Please selecta track...                        ").done (0).done (2);
+            return;
         }
+
+        final String trackName = deviceChain.getName ();
+        display.setBlock (0, 0, "Track: " + trackName);
+        if (trackName.length () > 10)
+            display.setBlock (0, 1, trackName.substring (10));
+        display.setCell (2, 0, "Active").setCell (3, 0, deviceChain.isActivated () ? "On" : "Off");
+        display.setCell (2, 1, "Rec Arm");
+        display.setCell (3, 1, deviceChain.isRecArm () ? "On" : "Off");
+        display.setCell (2, 2, "Mute").setCell (3, 2, deviceChain.isMute () ? "On" : "Off");
+        display.setCell (2, 3, "Solo").setCell (3, 3, deviceChain.isSolo () ? "On" : "Off");
+        display.setCell (2, 4, "Monitor");
+        display.setCell (3, 4, deviceChain.isMonitor () ? "On" : "Off");
+        display.setCell (2, 5, "Auto Monitor");
+        display.setCell (3, 5, deviceChain.isAutoMonitor () ? "On" : "Off");
+        final boolean hasPinning = this.model.getHost ().hasPinning ();
+        display.setCell (2, 6, hasPinning ? "Pin Trck" : "");
+        display.setCell (3, 6, hasPinning ? this.model.isCursorTrackPinned () ? "On" : "Off" : "");
+        display.setCell (2, 7, "Select").setCell (3, 7, "Color").done (0).done (1).done (2).done (3);
     }
 
 

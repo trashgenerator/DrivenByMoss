@@ -23,6 +23,7 @@ import de.mossgrabers.controller.push.command.trigger.PageRightCommand;
 import de.mossgrabers.controller.push.command.trigger.PanSendCommand;
 import de.mossgrabers.controller.push.command.trigger.PushBrowserCommand;
 import de.mossgrabers.controller.push.command.trigger.PushQuantizeCommand;
+import de.mossgrabers.controller.push.command.trigger.PushRecordCommand;
 import de.mossgrabers.controller.push.command.trigger.RasteredKnobCommand;
 import de.mossgrabers.controller.push.command.trigger.ScalesCommand;
 import de.mossgrabers.controller.push.command.trigger.SelectCommand;
@@ -48,6 +49,7 @@ import de.mossgrabers.controller.push.mode.MarkersMode;
 import de.mossgrabers.controller.push.mode.NoteMode;
 import de.mossgrabers.controller.push.mode.NoteRepeatMode;
 import de.mossgrabers.controller.push.mode.NoteViewSelectMode;
+import de.mossgrabers.controller.push.mode.RecordMode;
 import de.mossgrabers.controller.push.mode.RibbonMode;
 import de.mossgrabers.controller.push.mode.ScaleLayoutMode;
 import de.mossgrabers.controller.push.mode.ScalesMode;
@@ -108,7 +110,6 @@ import de.mossgrabers.framework.command.trigger.mode.ModeCursorCommand.Direction
 import de.mossgrabers.framework.command.trigger.track.AddTrackCommand;
 import de.mossgrabers.framework.command.trigger.transport.MetronomeCommand;
 import de.mossgrabers.framework.command.trigger.transport.PlayCommand;
-import de.mossgrabers.framework.command.trigger.transport.RecordCommand;
 import de.mossgrabers.framework.command.trigger.transport.TapTempoCommand;
 import de.mossgrabers.framework.configuration.AbstractConfiguration;
 import de.mossgrabers.framework.configuration.ISettingsUI;
@@ -279,6 +280,7 @@ public class PushControllerSetup extends AbstractControllerSetup<PushControlSurf
 
         modeManager.registerMode (Modes.AUTOMATION, new AutomationMode (surface, this.model));
         modeManager.registerMode (Modes.TRANSPORT, new TransportMode (surface, this.model));
+        modeManager.registerMode (Modes.REC_ARM, new RecordMode (surface, this.model));
 
         modeManager.registerMode (Modes.DEVICE_PARAMS, new DeviceParamsMode (surface, this.model));
         modeManager.registerMode (Modes.DEVICE_LAYER, new DeviceLayerMode ("Layer", surface, this.model));
@@ -416,7 +418,7 @@ public class PushControllerSetup extends AbstractControllerSetup<PushControlSurf
         final PushControlSurface surface = this.getSurface ();
         final ViewManager viewManager = surface.getViewManager ();
         this.addTriggerCommand (TriggerCommandID.PLAY, PushControlSurface.PUSH_BUTTON_PLAY, new PlayCommand<> (this.model, surface));
-        this.addTriggerCommand (TriggerCommandID.RECORD, PushControlSurface.PUSH_BUTTON_RECORD, new RecordCommand<> (this.model, surface));
+        this.addTriggerCommand (TriggerCommandID.RECORD, PushControlSurface.PUSH_BUTTON_RECORD, new PushRecordCommand (this.model, surface));
         this.addTriggerCommand (TriggerCommandID.NEW, PushControlSurface.PUSH_BUTTON_NEW, new NewCommand<> (this.model, surface));
         this.addTriggerCommand (TriggerCommandID.DUPLICATE, PushControlSurface.PUSH_BUTTON_DUPLICATE, new DuplicateCommand<> (this.model, surface));
         this.addTriggerCommand (TriggerCommandID.AUTOMATION, PushControlSurface.PUSH_BUTTON_AUTOMATION, new AutomationCommand (this.model, surface));

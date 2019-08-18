@@ -174,8 +174,6 @@ public class DeviceBrowserMode extends BaseMode
             return;
         }
 
-        final ITextDisplay d = this.surface.getDisplay ().clear ();
-
         switch (this.selectionMode)
         {
             case DeviceBrowserMode.SELECTION_OFF:
@@ -185,9 +183,9 @@ public class DeviceBrowserMode extends BaseMode
                 if (this.filterColumn == -1)
                     selectedContentType = Push1Display.SELECT_ARROW + selectedContentType;
 
-                d.setCell (0, 7, selectedContentType).setBlock (3, 0, " Selected Device:").setBlock (3, 1, deviceName.length () == 0 ? "None" : deviceName);
+                display.setCell (0, 7, selectedContentType).setBlock (3, 0, " Selected Device:").setBlock (3, 1, deviceName.length () == 0 ? "None" : deviceName);
                 final boolean isPresetSession = browser.isPresetContentType ();
-                d.setBlock (3, 2, isPresetSession ? " Selected Preset:" : "").setBlock (3, 3, isPresetSession ? selectedResult == null || selectedResult.length () == 0 ? "None" : selectedResult : "");
+                display.setBlock (3, 2, isPresetSession ? " Selected Preset:" : "").setBlock (3, 3, isPresetSession ? selectedResult == null || selectedResult.length () == 0 ? "None" : selectedResult : "");
 
                 for (int i = 0; i < 7; i++)
                 {
@@ -195,7 +193,7 @@ public class DeviceBrowserMode extends BaseMode
                     String name = column == null ? "" : StringUtils.shortenAndFixASCII (column.getName (), 8);
                     if (i == this.filterColumn)
                         name = Push1Display.SELECT_ARROW + name;
-                    d.setCell (0, i, name).setCell (1, i, getColumnName (column));
+                    display.setCell (0, i, name).setCell (1, i, getColumnName (column));
                 }
                 break;
 
@@ -204,16 +202,16 @@ public class DeviceBrowserMode extends BaseMode
 
                 if (!results[0].doesExist ())
                 {
-                    d.clear ().setBlock (1, 1, "       No results").setBlock (1, 2, "available...").allDone ();
+                    display.clear ().setBlock (1, 1, "       No results").setBlock (1, 2, "available...").allDone ();
                     return;
                 }
 
                 for (int i = 0; i < 16; i++)
                 {
                     if (i < results.length)
-                        d.setBlock (i % 4, i / 4, (results[i].isSelected () ? Push1Display.SELECT_ARROW : " ") + results[i].getName (16));
+                        display.setBlock (i % 4, i / 4, (results[i].isSelected () ? Push1Display.SELECT_ARROW : " ") + results[i].getName (16));
                     else
-                        d.setBlock (i % 4, i / 4, "");
+                        display.setBlock (i % 4, i / 4, "");
                 }
                 break;
 
@@ -227,7 +225,7 @@ public class DeviceBrowserMode extends BaseMode
                         final String hitStr = "(" + items[i].getHitCount () + ")";
                         text = text.substring (0, 17 - hitStr.length ()) + hitStr;
                     }
-                    d.setBlock (i % 4, i / 4, text);
+                    display.setBlock (i % 4, i / 4, text);
                 }
                 break;
 
@@ -235,7 +233,6 @@ public class DeviceBrowserMode extends BaseMode
                 // Not used
                 break;
         }
-        d.allDone ();
     }
 
 

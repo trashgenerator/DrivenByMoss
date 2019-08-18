@@ -6,11 +6,12 @@ package de.mossgrabers.controller.push.mode;
 
 import de.mossgrabers.controller.push.controller.Push1Display;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
-import de.mossgrabers.framework.Resolution;
 import de.mossgrabers.framework.controller.IValueChanger;
 import de.mossgrabers.framework.controller.display.Format;
 import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IModel;
+import de.mossgrabers.framework.daw.constants.Resolution;
+import de.mossgrabers.framework.daw.data.IParameter;
 import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.daw.midi.INoteInput;
 import de.mossgrabers.framework.daw.midi.INoteRepeat;
@@ -51,9 +52,6 @@ public class NoteRepeatMode extends BaseMode
     @Override
     public void onKnobValue (final int index, final int value)
     {
-        if (!this.increaseKnobMovement ())
-            return;
-
         final ITrack selectedTrack = this.model.getCurrentTrackBank ().getSelectedItem ();
 
         switch (index)
@@ -68,6 +66,10 @@ public class NoteRepeatMode extends BaseMode
             case 3:
                 final int sel2 = Resolution.change (Resolution.getMatch (this.noteRepeat.getNoteLength (selectedTrack)), this.model.getValueChanger ().calcKnobSpeed (value) > 0);
                 this.noteRepeat.setNoteLength (selectedTrack, Resolution.getValueAt (sel2));
+                break;
+
+            case 6:
+                this.model.getGroove ().getParameters ()[1].changeValue (value);
                 break;
 
             case 7:
@@ -87,10 +89,14 @@ public class NoteRepeatMode extends BaseMode
     {
         this.isKnobTouched[index] = isTouched;
 
-        if (isTouched && index == 7 && this.surface.isDeletePressed ())
+        if (isTouched && this.surface.isDeletePressed ())
         {
             this.surface.setTriggerConsumed (this.surface.getDeleteTriggerId ());
-            this.noteRepeat.setVelocityRamp (this.model.getCurrentTrackBank ().getSelectedItem (), 0);
+
+            if (index == 6)
+                this.model.getGroove ().getParameters ()[1].resetValue ();
+            else if (index == 7)
+                this.noteRepeat.setVelocityRamp (this.model.getCurrentTrackBank ().getSelectedItem (), 0);
         }
     }
 
@@ -153,36 +159,37 @@ public class NoteRepeatMode extends BaseMode
     @Override
     public void updateDisplay1 (final ITextDisplay display)
     {
-        final ITextDisplay d = this.surface.getDisplay ().clear ();
-
         final ITrack selectedTrack = this.model.getCurrentTrackBank ().getSelectedItem ();
 
-        d.setCell (0, 0, "Period:");
+        display.setCell (0, 0, "Period:");
         final int selPeriodIndex = this.getSelectedPeriodIndex (selectedTrack);
         int pos = 0;
         for (final Pair<String, Boolean> p: Push1Display.createMenuList (4, Resolution.getNames (), selPeriodIndex))
         {
-            d.setCell (pos, 1, (p.getValue ().booleanValue () ? Push1Display.SELECT_ARROW : " ") + p.getKey ());
+            display.setCell (pos, 1, (p.getValue ().booleanValue () ? Push1Display.SELECT_ARROW : " ") + p.getKey ());
             pos++;
         }
 
-        d.setCell (0, 2, "Length:");
+        display.setCell (0, 2, "Length:");
         final int selLengthIndex = this.getSelectedNoteLengthIndex (selectedTrack);
         pos = 0;
         for (final Pair<String, Boolean> p: Push1Display.createMenuList (4, Resolution.getNames (), selLengthIndex))
         {
-            d.setCell (pos, 3, (p.getValue ().booleanValue () ? Push1Display.SELECT_ARROW : " ") + p.getKey ());
+            display.setCell (pos, 3, (p.getValue ().booleanValue () ? Push1Display.SELECT_ARROW : " ") + p.getKey ());
             pos++;
         }
 
-        d.setCell (0, 7, "Accent");
-        d.setCell (1, 7, this.noteRepeat.getVelocityRampStr (selectedTrack));
-        d.setCell (2, 7, getRampDisplayValue (selectedTrack), Format.FORMAT_VALUE);
+        final IParameter shuffleParam = this.model.getGroove ().getParameters ()[1];
+        display.setCell (0, 6, shuffleParam.getName (10));
+        display.setCell (1, 6, shuffleParam.getDisplayedValue (8));
+        display.setCell (2, 6, shuffleParam.getValue (), Format.FORMAT_VALUE);
 
-        d.setCell (3, 6, "Shuffle");
-        d.setCell (3, 7, "Pressure");
+        display.setCell (0, 7, "Accent");
+        display.setCell (1, 7, this.noteRepeat.getVelocityRampStr (selectedTrack));
+        display.setCell (2, 7, getRampDisplayValue (selectedTrack), Format.FORMAT_VALUE);
 
-        d.allDone ();
+        display.setCell (3, 6, "Shuffle");
+        display.setCell (3, 7, "Pressure");
     }
 
 
@@ -206,8 +213,9 @@ public class NoteRepeatMode extends BaseMode
         message.addEmptyElement ();
         message.addEmptyElement ();
 
-        message.addOptionElement ("", "", false, "", "Shuffle", this.noteRepeat.isShuffle (selectedTrack), false);
-        message.addParameterElementWithPlainMenu ("", false, "Pressure", null, this.noteRepeat.usePressure (selectedTrack), "Vel. Ramp", getRampDisplayValue (selectedTrack), this.noteRepeat.getVelocityRampStr (selectedTrack), this.isKnobTouched[5], -1);
+        final IParameter shuffleParam = this.model.getGroove ().getParameters ()[1];
+        message.addParameterElementWithPlainMenu ("", false, "Shuffle", null, this.noteRepeat.isShuffle (selectedTrack), shuffleParam.getName (10), shuffleParam.getValue (), shuffleParam.getDisplayedValue (8), this.isKnobTouched[6], -1);
+        message.addParameterElementWithPlainMenu ("", false, "Pressure", null, this.noteRepeat.usePressure (selectedTrack), "Vel. Ramp", getRampDisplayValue (selectedTrack), this.noteRepeat.getVelocityRampStr (selectedTrack), this.isKnobTouched[7], -1);
     }
 
 
