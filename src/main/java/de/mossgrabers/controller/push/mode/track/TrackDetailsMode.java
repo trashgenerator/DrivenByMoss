@@ -159,7 +159,7 @@ public class TrackDetailsMode extends BaseMode
         final ITrack deviceChain = this.getSelectedTrack ();
         if (deviceChain == null)
         {
-            display.setRow (1, "                     Please selecta track...                        ").done (0).done (2);
+            display.setRow (1, "                     Please selecta track...                        ");
             return;
         }
 
@@ -179,7 +179,7 @@ public class TrackDetailsMode extends BaseMode
         final boolean hasPinning = this.model.getHost ().hasPinning ();
         display.setCell (2, 6, hasPinning ? "Pin Trck" : "");
         display.setCell (3, 6, hasPinning ? this.model.isCursorTrackPinned () ? "On" : "Off" : "");
-        display.setCell (2, 7, "Select").setCell (3, 7, "Color").done (0).done (1).done (2).done (3);
+        display.setCell (2, 7, "Select").setCell (3, 7, "Color");
     }
 
 

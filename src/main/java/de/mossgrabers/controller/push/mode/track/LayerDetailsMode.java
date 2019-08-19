@@ -154,7 +154,7 @@ public class LayerDetailsMode extends BaseMode
         final IChannel deviceChain = this.model.getCursorDevice ().getLayerOrDrumPadBank ().getSelectedItem ();
         if (deviceChain == null)
         {
-            display.setRow (1, "                     Please selecta layer...                        ").allDone ();
+            display.setRow (1, "                     Please selecta layer...                        ");
             return;
         }
 

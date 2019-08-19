@@ -29,7 +29,6 @@ import de.mossgrabers.framework.graphics.canvas.component.OptionsComponent;
 import de.mossgrabers.framework.graphics.canvas.component.ParameterComponent;
 import de.mossgrabers.framework.graphics.canvas.component.SceneListGridElement;
 import de.mossgrabers.framework.graphics.canvas.component.SendsComponent;
-import de.mossgrabers.framework.graphics.canvas.utils.GridChangeListener;
 import de.mossgrabers.framework.graphics.canvas.utils.SendData;
 import de.mossgrabers.framework.graphics.display.ModelInfo;
 import de.mossgrabers.framework.utils.Pair;
@@ -49,7 +48,7 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @author J&uuml;rgen Mo&szlig;graber
  */
-public abstract class AbstractGraphicDisplay implements IGraphicDisplay, GridChangeListener
+public abstract class AbstractGraphicDisplay implements IGraphicDisplay
 {
     private static final double []         COLOR_BLACK                     = new double []
     {
@@ -123,9 +122,7 @@ public abstract class AbstractGraphicDisplay implements IGraphicDisplay, GridCha
     }
 
 
-    /** {@inheritDoc} */
-    @Override
-    public void render ()
+    private void render ()
     {
         this.image.render (gc -> {
             final int width = this.dimensions.getWidth ();
