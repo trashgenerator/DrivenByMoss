@@ -10,6 +10,7 @@ import de.mossgrabers.controller.push.mode.NoteMode;
 import de.mossgrabers.framework.controller.color.ColorManager;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.INoteClip;
+import de.mossgrabers.framework.daw.IStepInfo;
 import de.mossgrabers.framework.mode.ModeManager;
 import de.mossgrabers.framework.mode.Modes;
 import de.mossgrabers.framework.utils.ButtonEvent;
@@ -106,8 +107,8 @@ public class SequencerView extends AbstractNoteSequencerView<PushControlSurface,
         final int x = index % 8;
         final INoteClip cursorClip = this.getClip ();
         final int mappedNote = this.keyManager.map (y);
-        final int state = cursorClip.getStep (x, mappedNote);
-        if (state != INoteClip.NOTE_START)
+        final int state = cursorClip.getStep (x, mappedNote).getState ();
+        if (state != IStepInfo.NOTE_START)
             return;
 
         final ModeManager modeManager = this.surface.getModeManager ();

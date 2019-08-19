@@ -157,7 +157,7 @@ public class SequencerView extends BaseSequencerView
             final int hiStep = this.isInXRange (step) ? step % SequencerView.NUM_DISPLAY_COLS : -1;
             for (int col = 0; col < SequencerView.NUM_DISPLAY_COLS; col++)
             {
-                final int isSet = clip.getStep (col, this.offsetY + this.selectedPad);
+                final int isSet = clip.getStep (col, this.offsetY + this.selectedPad).getState ();
                 padGrid.lightEx (col % 8, 1 - col / 8, getSequencerColor (isSet, col == hiStep));
             }
         }

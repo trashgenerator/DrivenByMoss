@@ -11,6 +11,7 @@ import de.mossgrabers.framework.controller.display.IGraphicDisplay;
 import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.INoteClip;
+import de.mossgrabers.framework.daw.IStepInfo;
 import de.mossgrabers.framework.scale.Scales;
 import de.mossgrabers.framework.utils.StringUtils;
 
@@ -51,6 +52,14 @@ public class NoteMode extends BaseMode
         this.clip = clip;
         this.step = step;
         this.note = note;
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void onKnobTouch (int index, boolean isTouched)
+    {
+        this.clip.edit (this.step, this.note, isTouched);
     }
 
 
@@ -98,12 +107,13 @@ public class NoteMode extends BaseMode
     @Override
     public void updateDisplay1 (final ITextDisplay display)
     {
-        final double noteVelocity = this.clip.getStepVelocity (this.step, this.note);
-        final double noteReleaseVelocity = this.clip.getStepReleaseVelocity (this.step, this.note);
-        final double notePressure = this.clip.getStepPressure (this.step, this.note);
-        final double noteTimbre = this.clip.getStepTimbre (this.step, this.note);
-        final double notePan = this.clip.getStepPan (this.step, this.note);
-        final double noteTranspose = this.clip.getStepTranspose (this.step, this.note);
+        final IStepInfo stepInfo = this.clip.getStep (this.step, this.note);
+        final double noteVelocity = stepInfo.getVelocity ();
+        final double noteReleaseVelocity = stepInfo.getReleaseVelocity ();
+        final double notePressure = stepInfo.getPressure ();
+        final double noteTimbre = stepInfo.getTimbre ();
+        final double notePan = stepInfo.getPan ();
+        final double noteTranspose = stepInfo.getTranspose ();
 
         final IValueChanger valueChanger = this.model.getValueChanger ();
         final int parameterValue = valueChanger.fromNormalizedValue (noteVelocity);
@@ -113,7 +123,7 @@ public class NoteMode extends BaseMode
         final int parameterPanValue = valueChanger.fromNormalizedValue ((notePan + 1.0) / 2.0);
         final int parameterTransposeValue = valueChanger.fromNormalizedValue ((noteTranspose + 24.0) / 48.0);
 
-        display.setCell (0, 1, "Length").setCell (1, 1, this.formatLength ());
+        display.setCell (0, 1, "Length").setCell (1, 1, this.formatLength (stepInfo.getDuration ()));
         display.setCell (0, 2, "Velocity").setCell (1, 2, formatPercentage (noteVelocity)).setCell (2, 2, parameterValue, Format.FORMAT_VALUE);
         display.setCell (0, 3, "R-Velocity").setCell (1, 3, formatPercentage (noteReleaseVelocity)).setCell (2, 3, parameterReleaseValue, Format.FORMAT_VALUE);
         display.setCell (0, 4, "Pressure").setCell (1, 4, formatPercentage (notePressure)).setCell (2, 4, parameterPressureValue, Format.FORMAT_VALUE);
@@ -130,12 +140,13 @@ public class NoteMode extends BaseMode
     @Override
     public void updateDisplay2 (final IGraphicDisplay display)
     {
-        final double noteVelocity = this.clip.getStepVelocity (this.step, this.note);
-        final double noteReleaseVelocity = this.clip.getStepReleaseVelocity (this.step, this.note);
-        final double notePressure = this.clip.getStepPressure (this.step, this.note);
-        final double noteTimbre = this.clip.getStepTimbre (this.step, this.note);
-        final double notePan = this.clip.getStepPan (this.step, this.note);
-        final double noteTranspose = this.clip.getStepTranspose (this.step, this.note);
+        final IStepInfo stepInfo = this.clip.getStep (this.step, this.note);
+        final double noteVelocity = stepInfo.getVelocity ();
+        final double noteReleaseVelocity = stepInfo.getReleaseVelocity ();
+        final double notePressure = stepInfo.getPressure ();
+        final double noteTimbre = stepInfo.getTimbre ();
+        final double notePan = stepInfo.getPan ();
+        final double noteTranspose = stepInfo.getTranspose ();
 
         final IValueChanger valueChanger = this.model.getValueChanger ();
         final int parameterValue = valueChanger.fromNormalizedValue (noteVelocity);
@@ -147,7 +158,7 @@ public class NoteMode extends BaseMode
 
         display.addOptionElement ("Step: " + (this.step + 1), "", false, "Note: " + Scales.formatNoteAndOctave (this.note, -3), "", false, false);
 
-        display.addParameterElement ("Length", -1, this.formatLength (), this.isKnobTouched[1], -1);
+        display.addParameterElement ("Length", -1, this.formatLength (stepInfo.getDuration ()), this.isKnobTouched[1], -1);
         display.addParameterElement ("Velocity", parameterValue, formatPercentage (noteVelocity), this.isKnobTouched[2], parameterValue);
         display.addParameterElement ("R-Velocity", parameterReleaseValue, formatPercentage (noteReleaseVelocity), this.isKnobTouched[3], parameterReleaseValue);
         display.addParameterElement ("Pressure", parameterPressureValue, formatPercentage (notePressure), this.isKnobTouched[4], parameterPressureValue);
@@ -171,12 +182,12 @@ public class NoteMode extends BaseMode
 
     /**
      * Format the duration of the current note.
-     *
+     * 
+     * @param duration The note duration
      * @return The formatted value
      */
-    private String formatLength ()
+    private String formatLength (final double duration)
     {
-        final double noteLength = this.clip.getStepDuration (this.step, this.note);
-        return StringUtils.formatMeasuresLong (this.model.getTransport ().getQuartersPerMeasure (), noteLength, 0);
+        return StringUtils.formatMeasuresLong (this.model.getTransport ().getQuartersPerMeasure (), duration, 0);
     }
 }
