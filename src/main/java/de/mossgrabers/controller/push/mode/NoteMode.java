@@ -7,10 +7,10 @@ package de.mossgrabers.controller.push.mode;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
 import de.mossgrabers.framework.controller.IValueChanger;
 import de.mossgrabers.framework.controller.display.Format;
+import de.mossgrabers.framework.controller.display.IGraphicDisplay;
 import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.INoteClip;
-import de.mossgrabers.framework.graphics.display.DisplayModel;
 import de.mossgrabers.framework.scale.Scales;
 import de.mossgrabers.framework.utils.StringUtils;
 
@@ -128,7 +128,7 @@ public class NoteMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay2 (final DisplayModel message)
+    public void updateDisplay2 (final IGraphicDisplay display)
     {
         final double noteVelocity = this.clip.getStepVelocity (this.step, this.note);
         final double noteReleaseVelocity = this.clip.getStepReleaseVelocity (this.step, this.note);
@@ -145,15 +145,15 @@ public class NoteMode extends BaseMode
         final int parameterPanValue = valueChanger.fromNormalizedValue ((notePan + 1.0) / 2.0);
         final int parameterTransposeValue = valueChanger.fromNormalizedValue ((noteTranspose + 24.0) / 48.0);
 
-        message.addOptionElement ("Step: " + (this.step + 1), "", false, "Note: " + Scales.formatNoteAndOctave (this.note, -3), "", false, false);
+        display.addOptionElement ("Step: " + (this.step + 1), "", false, "Note: " + Scales.formatNoteAndOctave (this.note, -3), "", false, false);
 
-        message.addParameterElement ("Length", -1, this.formatLength (), this.isKnobTouched[1], -1);
-        message.addParameterElement ("Velocity", parameterValue, formatPercentage (noteVelocity), this.isKnobTouched[2], parameterValue);
-        message.addParameterElement ("R-Velocity", parameterReleaseValue, formatPercentage (noteReleaseVelocity), this.isKnobTouched[3], parameterReleaseValue);
-        message.addParameterElement ("Pressure", parameterPressureValue, formatPercentage (notePressure), this.isKnobTouched[4], parameterPressureValue);
-        message.addParameterElement ("Timbre", parameterTimbreValue, formatPercentage (noteTimbre), this.isKnobTouched[5], parameterTimbreValue);
-        message.addParameterElement ("Pan", parameterPanValue, formatPercentage (notePan), this.isKnobTouched[6], parameterPanValue);
-        message.addParameterElement ("Pitch", parameterTransposeValue, String.format ("%.1f", Double.valueOf (noteTranspose)), this.isKnobTouched[7], parameterTransposeValue);
+        display.addParameterElement ("Length", -1, this.formatLength (), this.isKnobTouched[1], -1);
+        display.addParameterElement ("Velocity", parameterValue, formatPercentage (noteVelocity), this.isKnobTouched[2], parameterValue);
+        display.addParameterElement ("R-Velocity", parameterReleaseValue, formatPercentage (noteReleaseVelocity), this.isKnobTouched[3], parameterReleaseValue);
+        display.addParameterElement ("Pressure", parameterPressureValue, formatPercentage (notePressure), this.isKnobTouched[4], parameterPressureValue);
+        display.addParameterElement ("Timbre", parameterTimbreValue, formatPercentage (noteTimbre), this.isKnobTouched[5], parameterTimbreValue);
+        display.addParameterElement ("Pan", parameterPanValue, formatPercentage (notePan), this.isKnobTouched[6], parameterPanValue);
+        display.addParameterElement ("Pitch", parameterTransposeValue, String.format ("%.1f", Double.valueOf (noteTranspose)), this.isKnobTouched[7], parameterTransposeValue);
     }
 
 

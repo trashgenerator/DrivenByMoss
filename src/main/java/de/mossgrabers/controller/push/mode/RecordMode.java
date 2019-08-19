@@ -7,11 +7,11 @@ package de.mossgrabers.controller.push.mode;
 import de.mossgrabers.controller.push.controller.Push1Display;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
 import de.mossgrabers.framework.controller.color.ColorManager;
+import de.mossgrabers.framework.controller.display.IGraphicDisplay;
 import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IApplication;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.constants.RecordQuantization;
-import de.mossgrabers.framework.graphics.display.DisplayModel;
 import de.mossgrabers.framework.mode.AbstractMode;
 import de.mossgrabers.framework.utils.ButtonEvent;
 
@@ -52,16 +52,16 @@ public class RecordMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay2 (final DisplayModel message)
+    public void updateDisplay2 (final IGraphicDisplay display)
     {
         final IApplication application = this.model.getApplication ();
         final RecordQuantization recQuant = application.getRecordQuantizationGrid ();
         final RecordQuantization [] values = RecordQuantization.values ();
         for (int i = 0; i < values.length; i++)
-            message.addOptionElement ("", "", false, i == 0 ? "Record Quantization" : "", values[i].getName (), values[i] == recQuant, false);
-        message.addEmptyElement ();
-        message.addOptionElement ("", "", false, "Quantize Note Length", application.isRecordQuantizationNoteLength () ? "On" : "Off", application.isRecordQuantizationNoteLength (), false);
-        message.addEmptyElement ();
+            display.addOptionElement ("", "", false, i == 0 ? "Record Quantization" : "", values[i].getName (), values[i] == recQuant, false);
+        display.addEmptyElement ();
+        display.addOptionElement ("", "", false, "Quantize Note Length", application.isRecordQuantizationNoteLength () ? "On" : "Off", application.isRecordQuantizationNoteLength (), false);
+        display.addEmptyElement ();
     }
 
 

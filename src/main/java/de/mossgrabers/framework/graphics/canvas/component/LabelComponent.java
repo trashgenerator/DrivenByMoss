@@ -81,22 +81,18 @@ public class LabelComponent implements IComponent
         final double separatorSize = dimensions.getSeparatorSize ();
         final double menuHeight = dimensions.getMenuHeight ();
 
-        final ColorEx borderColor = configuration.getColorBorder ();
+        final ColorEx bgColor = getBackgroundColor (configuration);
+        final ColorEx textColor = ColorEx.calcContrastColor (bgColor);
 
         if (this.text == null || this.text.length () == 0)
         {
             if (this.layout == LabelLayout.SMALL_HEADER)
             {
                 // Remove the 2 pixels of the previous menus border line
-                info.getContext ().fillRectangle (bounds.getLeft () - separatorSize, menuHeight - 2, separatorSize, 1, borderColor);
+                info.getContext ().fillRectangle (bounds.getLeft () - separatorSize, menuHeight - 2, separatorSize, 1, bgColor);
             }
             return;
         }
-
-        final ColorEx textColor = configuration.getColorText ();
-
-        ColorEx bgColor = this.backgroundColor == null ? configuration.getColorBackground () : this.backgroundColor;
-        bgColor = this.isSelected ? textColor : bgColor;
 
         final double left = bounds.getLeft ();
         final double top = bounds.getTop ();
@@ -106,8 +102,8 @@ public class LabelComponent implements IComponent
         final IGraphicsContext gc = info.getContext ();
         if (this.layout == LabelLayout.SMALL_HEADER)
         {
-            gc.fillRectangle (left, top, width, menuHeight - 1.0, this.isSelected ? textColor : borderColor);
-            gc.fillRectangle (left, menuHeight - 2.0, width + separatorSize, 1, textColor);
+            gc.fillRectangle (left, top, width, menuHeight - 1.0, bgColor);
+            gc.fillRectangle (left, menuHeight - 2.0, width + separatorSize, 1, this.isSelected ? bgColor : textColor);
         }
         else
             gc.fillRectangle (left, top, width, height, bgColor);
@@ -115,9 +111,9 @@ public class LabelComponent implements IComponent
         final double unit = dimensions.getUnit ();
 
         if (this.layout == LabelLayout.SMALL_HEADER)
-            gc.drawTextInBounds (this.text, left, 1, width, unit + separatorSize, Align.CENTER, this.isSelected ? borderColor : textColor, unit);
+            gc.drawTextInBounds (this.text, left, 1, width, unit + separatorSize, Align.CENTER, textColor, unit);
         else
-            gc.drawTextInBounds (this.text, left, top, width, height, Align.CENTER, ColorEx.calcContrastColor (bgColor), height / 2);
+            gc.drawTextInBounds (this.text, left, top, width, height, Align.CENTER, textColor, height / 2);
     }
 
 
@@ -147,21 +143,22 @@ public class LabelComponent implements IComponent
         final String iconName = this.getIcon ();
 
         final int trackRowHeight = (int) (1.6 * unit);
+        final double textTop = top + height - trackRowHeight - unit;
         if (iconName != null)
         {
             final IImage image = ResourceHandler.getSVGImage (iconName);
             final ColorEx maskColor = this.modifyIfOff (this.getMaskColor (configuration));
             if (maskColor == null)
-                gc.drawImage (image, left + (doubleUnit - image.getWidth ()) / 2, height - trackRowHeight - unit + (trackRowHeight - image.getHeight ()) / 2.0);
+                gc.drawImage (image, left + (doubleUnit - image.getWidth ()) / 2, textTop + (trackRowHeight - image.getHeight ()) / 2.0);
             else
-                gc.maskImage (image, left + (doubleUnit - image.getWidth ()) / 2, height - trackRowHeight - unit + (trackRowHeight - image.getHeight ()) / 2.0, maskColor);
+                gc.maskImage (image, left + (doubleUnit - image.getWidth ()) / 2, textTop + (trackRowHeight - image.getHeight ()) / 2.0, maskColor);
         }
 
-        gc.drawTextInBounds (this.text, left + doubleUnit, height - trackRowHeight - unit, width - doubleUnit, trackRowHeight, Align.LEFT, this.modifyIfOff (configuration.getColorText ()), 1.2 * unit);
+        gc.drawTextInBounds (this.text, left + doubleUnit, textTop, width - doubleUnit, trackRowHeight, Align.LEFT, this.modifyIfOff (configuration.getColorText ()), 1.2 * unit);
 
         // The track color section
         final ColorEx infoColor = this.backgroundColor;
-        gc.fillRectangle (left, height - unit, width, unit, this.isActive ? infoColor : ColorEx.evenDarker (infoColor));
+        gc.fillRectangle (left, top + height - unit, width, unit, this.isActive ? infoColor : ColorEx.evenDarker (infoColor));
     }
 
 
@@ -221,8 +218,21 @@ public class LabelComponent implements IComponent
     }
 
 
-    public LabelLayout getLayout ()
+    private ColorEx getBackgroundColor (final IGraphicsConfiguration configuration)
     {
-        return this.layout;
+        if (this.isSelected)
+            return configuration.getColorText ();
+
+        if (this.backgroundColor != null)
+            return this.backgroundColor;
+
+        if (this.layout == LabelLayout.SEPARATE_COLOR)
+            return configuration.getColorBackground ();
+
+        if (this.layout == LabelLayout.PLAIN)
+            return configuration.getColorBackgroundDarker ();
+
+        // SMALL_HEADER
+        return configuration.getColorBorder ();
     }
 }

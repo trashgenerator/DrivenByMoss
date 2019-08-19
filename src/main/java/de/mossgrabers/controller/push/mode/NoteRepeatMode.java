@@ -8,6 +8,7 @@ import de.mossgrabers.controller.push.controller.Push1Display;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
 import de.mossgrabers.framework.controller.IValueChanger;
 import de.mossgrabers.framework.controller.display.Format;
+import de.mossgrabers.framework.controller.display.IGraphicDisplay;
 import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.constants.Resolution;
@@ -15,7 +16,6 @@ import de.mossgrabers.framework.daw.data.IParameter;
 import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.daw.midi.INoteInput;
 import de.mossgrabers.framework.daw.midi.INoteRepeat;
-import de.mossgrabers.framework.graphics.display.DisplayModel;
 import de.mossgrabers.framework.mode.AbstractMode;
 import de.mossgrabers.framework.utils.ButtonEvent;
 import de.mossgrabers.framework.utils.Pair;
@@ -195,27 +195,27 @@ public class NoteRepeatMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void updateDisplay2 (final DisplayModel message)
+    public void updateDisplay2 (final IGraphicDisplay display)
     {
         if (this.noteRepeat == null)
             return;
 
         final ITrack selectedTrack = this.model.getCurrentTrackBank ().getSelectedItem ();
 
-        message.addOptionElement ("Period", "", false, "", "", false, false);
+        display.addOptionElement ("Period", "", false, "", "", false, false);
         final int selPeriodIndex = this.getSelectedPeriodIndex (selectedTrack);
-        message.addListElement (6, Resolution.getNames (), selPeriodIndex);
+        display.addListElement (6, Resolution.getNames (), selPeriodIndex);
 
-        message.addOptionElement ("  Length", "", false, "", "", false, false);
+        display.addOptionElement ("  Length", "", false, "", "", false, false);
         final int selLengthIndex = this.getSelectedNoteLengthIndex (selectedTrack);
-        message.addListElement (6, Resolution.getNames (), selLengthIndex);
+        display.addListElement (6, Resolution.getNames (), selLengthIndex);
 
-        message.addEmptyElement ();
-        message.addEmptyElement ();
+        display.addEmptyElement ();
+        display.addEmptyElement ();
 
         final IParameter shuffleParam = this.model.getGroove ().getParameters ()[1];
-        message.addParameterElementWithPlainMenu ("", false, "Shuffle", null, this.noteRepeat.isShuffle (selectedTrack), shuffleParam.getName (10), shuffleParam.getValue (), shuffleParam.getDisplayedValue (8), this.isKnobTouched[6], -1);
-        message.addParameterElementWithPlainMenu ("", false, "Pressure", null, this.noteRepeat.usePressure (selectedTrack), "Vel. Ramp", getRampDisplayValue (selectedTrack), this.noteRepeat.getVelocityRampStr (selectedTrack), this.isKnobTouched[7], -1);
+        display.addParameterElementWithPlainMenu ("", false, "Shuffle", null, this.noteRepeat.isShuffle (selectedTrack), shuffleParam.getName (10), shuffleParam.getValue (), shuffleParam.getDisplayedValue (8), this.isKnobTouched[6], -1);
+        display.addParameterElementWithPlainMenu ("", false, "Pressure", null, this.noteRepeat.usePressure (selectedTrack), "Vel. Ramp", getRampDisplayValue (selectedTrack), this.noteRepeat.getVelocityRampStr (selectedTrack), this.isKnobTouched[7], -1);
     }
 
 
