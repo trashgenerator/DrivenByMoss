@@ -221,14 +221,6 @@ public class SlotImpl extends AbstractItemImpl implements ISlot
 
     /** {@inheritDoc} */
     @Override
-    public void create (final int length)
-    {
-        this.slot.createEmptyClip (length);
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
     public void remove ()
     {
         this.slot.deleteObject ();

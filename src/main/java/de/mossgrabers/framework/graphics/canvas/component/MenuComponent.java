@@ -70,4 +70,45 @@ public class MenuComponent implements IComponent
         final double menuHeight = 2 * info.getDimensions ().getMenuHeight ();
         this.footer.draw (info.withBounds (info.getBounds ().getHeight () - menuHeight, menuHeight));
     }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode ()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (this.footer == null ? 0 : this.footer.hashCode ());
+        result = prime * result + (this.header == null ? 0 : this.header.hashCode ());
+        return result;
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals (final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (this.getClass () != obj.getClass ())
+            return false;
+        final MenuComponent other = (MenuComponent) obj;
+        if (this.footer == null)
+        {
+            if (other.footer != null)
+                return false;
+        }
+        else if (!this.footer.equals (other.footer))
+            return false;
+        if (this.header == null)
+        {
+            if (other.header != null)
+                return false;
+        }
+        else if (!this.header.equals (other.header))
+            return false;
+        return true;
+    }
 }

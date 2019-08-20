@@ -235,4 +235,61 @@ public class LabelComponent implements IComponent
         // SMALL_HEADER
         return configuration.getColorBorder ();
     }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode ()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.backgroundColor == null) ? 0 : this.backgroundColor.hashCode ());
+        result = prime * result + ((this.icon == null) ? 0 : this.icon.hashCode ());
+        result = prime * result + (this.isActive ? 1231 : 1237);
+        result = prime * result + (this.isSelected ? 1231 : 1237);
+        result = prime * result + ((this.layout == null) ? 0 : this.layout.hashCode ());
+        return prime * result + ((this.text == null) ? 0 : this.text.hashCode ());
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals (Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass () != obj.getClass ())
+            return false;
+        LabelComponent other = (LabelComponent) obj;
+        if (this.backgroundColor == null)
+        {
+            if (other.backgroundColor != null)
+                return false;
+        }
+        else if (!this.backgroundColor.equals (other.backgroundColor))
+            return false;
+        if (this.icon == null)
+        {
+            if (other.icon != null)
+                return false;
+        }
+        else if (!this.icon.equals (other.icon))
+            return false;
+        if (this.isActive != other.isActive)
+            return false;
+        if (this.isSelected != other.isSelected)
+            return false;
+        if (this.layout != other.layout)
+            return false;
+        if (this.text == null)
+        {
+            if (other.text != null)
+                return false;
+        }
+        else if (!this.text.equals (other.text))
+            return false;
+        return true;
+    }
 }
