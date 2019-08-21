@@ -136,7 +136,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public String getVelocityRampStr (ITrack track)
+    public String getVelocityRampStr (final ITrack track)
     {
         return String.format ("%.2f", Double.valueOf (this.getVelocityRamp (track)));
     }

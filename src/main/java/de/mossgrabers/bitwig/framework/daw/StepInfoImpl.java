@@ -128,43 +128,43 @@ public class StepInfoImpl implements IStepInfo
     }
 
 
-    void setDuration (double duration)
+    void setDuration (final double duration)
     {
         this.duration = duration;
     }
 
 
-    void setVelocity (double velocity)
+    void setVelocity (final double velocity)
     {
         this.velocity = velocity;
     }
 
 
-    void setReleaseVelocity (double releaseVelocity)
+    void setReleaseVelocity (final double releaseVelocity)
     {
         this.releaseVelocity = releaseVelocity;
     }
 
 
-    void setPressure (double pressure)
+    void setPressure (final double pressure)
     {
         this.pressure = pressure;
     }
 
 
-    void setTimbre (double timbre)
+    void setTimbre (final double timbre)
     {
         this.timbre = timbre;
     }
 
 
-    void setPan (double pan)
+    void setPan (final double pan)
     {
         this.pan = pan;
     }
 
 
-    void setTranspose (double transpose)
+    void setTranspose (final double transpose)
     {
         this.transpose = transpose;
     }

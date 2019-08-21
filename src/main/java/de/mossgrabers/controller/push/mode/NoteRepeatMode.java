@@ -186,7 +186,7 @@ public class NoteRepeatMode extends BaseMode
 
         display.setCell (0, 7, "Accent");
         display.setCell (1, 7, this.noteRepeat.getVelocityRampStr (selectedTrack));
-        display.setCell (2, 7, getRampDisplayValue (selectedTrack), Format.FORMAT_VALUE);
+        display.setCell (2, 7, this.getRampDisplayValue (selectedTrack), Format.FORMAT_VALUE);
 
         display.setCell (3, 6, "Shuffle");
         display.setCell (3, 7, "Pressure");
@@ -215,7 +215,7 @@ public class NoteRepeatMode extends BaseMode
 
         final IParameter shuffleParam = this.model.getGroove ().getParameters ()[1];
         display.addParameterElementWithPlainMenu ("", false, "Shuffle", null, this.noteRepeat.isShuffle (selectedTrack), shuffleParam.getName (10), shuffleParam.getValue (), shuffleParam.getDisplayedValue (8), this.isKnobTouched[6], -1);
-        display.addParameterElementWithPlainMenu ("", false, "Pressure", null, this.noteRepeat.usePressure (selectedTrack), "Vel. Ramp", getRampDisplayValue (selectedTrack), this.noteRepeat.getVelocityRampStr (selectedTrack), this.isKnobTouched[7], -1);
+        display.addParameterElementWithPlainMenu ("", false, "Pressure", null, this.noteRepeat.usePressure (selectedTrack), "Vel. Ramp", this.getRampDisplayValue (selectedTrack), this.noteRepeat.getVelocityRampStr (selectedTrack), this.isKnobTouched[7], -1);
     }
 
 

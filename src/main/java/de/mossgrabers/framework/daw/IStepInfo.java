@@ -21,7 +21,7 @@ public interface IStepInfo
 
     /**
      * Get state.
-     * 
+     *
      * @return 0: not set, 1: note continues playing, 2: start of note, see the defined constants
      */
     int getState ();

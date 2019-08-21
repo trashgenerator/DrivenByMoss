@@ -160,7 +160,7 @@ public interface Configuration
 
     /**
      * Get the default length for new clips as beats.
-     * 
+     *
      * @param quartersPerMeasure The number of quarters per measure
      * @return The default length for new clips in beats
      */

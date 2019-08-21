@@ -57,7 +57,7 @@ public class NoteMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
-    public void onKnobTouch (int index, boolean isTouched)
+    public void onKnobTouch (final int index, final boolean isTouched)
     {
         this.clip.edit (this.step, this.note, isTouched);
     }
@@ -170,7 +170,7 @@ public class NoteMode extends BaseMode
 
     /**
      * Format a velocity percentage.
-     * 
+     *
      * @param noteVelocity The velocity in the range of 0..1.
      * @return The formatted velocity
      */
@@ -182,7 +182,7 @@ public class NoteMode extends BaseMode
 
     /**
      * Format the duration of the current note.
-     * 
+     *
      * @param duration The note duration
      * @return The formatted value
      */

@@ -84,7 +84,7 @@ public class NewCommand<S extends IControlSurface<C>, C extends Configuration> e
 
     private int getNewClipLenghthInBeats (final int quartersPerMeasure)
     {
-        final int length = getClipLength ();
+        final int length = this.getClipLength ();
         return (int) (length < 2 ? Math.pow (2, length) : Math.pow (2, length - 2.0) * quartersPerMeasure);
     }
 
