@@ -19,6 +19,8 @@ import com.bitwig.extension.controller.api.Track;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 
 /**
@@ -350,7 +352,19 @@ public class TrackImpl extends ChannelImpl implements ITrack
     @Override
     public void createClip (final int slotIndex, final int lengthInBeats)
     {
-        this.track.createNewClip (slotIndex, lengthInBeats);
+        final Future<Integer> future = this.track.createNewClip (slotIndex, lengthInBeats);
+        try
+        {
+            future.get ();
+        }
+        catch (final InterruptedException ex)
+        {
+            Thread.currentThread ().interrupt ();
+        }
+        catch (final ExecutionException ex)
+        {
+            // Intentionally empty
+        }
     }
 
 

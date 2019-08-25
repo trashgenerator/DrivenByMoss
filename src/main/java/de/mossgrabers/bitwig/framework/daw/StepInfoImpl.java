@@ -16,14 +16,16 @@ import com.bitwig.extension.controller.api.Clip.StepInfo;
  */
 public class StepInfoImpl implements IStepInfo
 {
-    private int    state;
-    private double duration = 1.0 / 4.0; // 16th
-    private double velocity;
-    private double releaseVelocity;
-    private double pressure;
-    private double timbre;
-    private double pan;
-    private double transpose;
+    private int     state;
+    private double  duration = 1.0 / 4.0; // 16th
+    private double  velocity;
+    private double  releaseVelocity;
+    private double  pressure;
+    private double  timbre;
+    private double  pan;
+    private double  transpose;
+
+    private boolean isEditing;
 
 
     /**
@@ -118,6 +120,19 @@ public class StepInfoImpl implements IStepInfo
      */
     public void updateData (final StepInfo stepInfo)
     {
+        switch (stepInfo.getState ())
+        {
+            case NoteOn:
+                this.state = IStepInfo.NOTE_START;
+                break;
+            case NoteSustain:
+                this.state = IStepInfo.NOTE_CONTINUE;
+                break;
+            case Empty:
+                this.state = IStepInfo.NOTE_OFF;
+                break;
+        }
+
         this.duration = stepInfo.getDuration ();
         this.velocity = stepInfo.getVelocity ();
         this.releaseVelocity = stepInfo.getReleaseVelocity ();
@@ -167,5 +182,27 @@ public class StepInfoImpl implements IStepInfo
     void setTranspose (final double transpose)
     {
         this.transpose = transpose;
+    }
+
+
+    /**
+     * Check if the note is currently edited.
+     *
+     * @return True if editing is happening
+     */
+    boolean isEditing ()
+    {
+        return this.isEditing;
+    }
+
+
+    /**
+     * Set that the note is currently edited.
+     * 
+     * @param isEditing True if editing is happening
+     */
+    void setEditing (final boolean isEditing)
+    {
+        this.isEditing = isEditing;
     }
 }

@@ -59,6 +59,45 @@ public class NoteMode extends BaseMode
     @Override
     public void onKnobTouch (final int index, final boolean isTouched)
     {
+        if (isTouched && this.surface.isDeletePressed ())
+        {
+            this.surface.setTriggerConsumed (this.surface.getDeleteTriggerId ());
+            switch (index)
+            {
+                case 1:
+                    this.clip.updateStepDuration (this.step, this.note, 1.0);
+                    break;
+
+                case 2:
+                    this.clip.updateStepVelocity (this.step, this.note, 1.0);
+                    break;
+
+                case 3:
+                    this.clip.updateStepReleaseVelocity (this.step, this.note, 1.0);
+                    break;
+
+                case 4:
+                    this.clip.updateStepPressure (this.step, this.note, 0);
+                    break;
+
+                case 5:
+                    this.clip.updateStepTimbre (this.step, this.note, 0);
+                    break;
+
+                case 6:
+                    this.clip.updateStepPan (this.step, this.note, 0);
+                    break;
+
+                case 7:
+                    this.clip.updateStepTranspose (this.step, this.note, 0);
+                    break;
+
+                default:
+                    return;
+            }
+            return;
+        }
+
         this.clip.edit (this.step, this.note, isTouched);
     }
 
