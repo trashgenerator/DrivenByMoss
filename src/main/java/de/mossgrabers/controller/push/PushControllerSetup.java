@@ -301,7 +301,8 @@ public class PushControllerSetup extends AbstractControllerSetup<PushControlSurf
         modeManager.registerMode (Modes.DEVICE_LAYER_SEND7, modeLayerSend);
         modeManager.registerMode (Modes.DEVICE_LAYER_SEND8, modeLayerSend);
 
-        modeManager.registerMode (Modes.USER, new UserParamsMode (surface, this.model));
+        if (this.host.hasUserParameters ())
+            modeManager.registerMode (Modes.USER, new UserParamsMode (surface, this.model));
 
         if (this.isPush2)
         {
@@ -472,7 +473,8 @@ public class PushControllerSetup extends AbstractControllerSetup<PushControlSurf
         {
             surface.assignTriggerCommand (PushControlSurface.PUSH_BUTTON_SETUP, TriggerCommandID.SETUP);
             this.addTriggerCommand (TriggerCommandID.CONVERT, PushControlSurface.PUSH_BUTTON_CONVERT, new ConvertCommand<> (this.model, surface));
-            this.addTriggerCommand (TriggerCommandID.USER, PushControlSurface.PUSH_BUTTON_USER_MODE, new ModeSelectCommand<> (this.model, surface, Modes.USER));
+            if (this.host.hasUserParameters ())
+                this.addTriggerCommand (TriggerCommandID.USER, PushControlSurface.PUSH_BUTTON_USER_MODE, new ModeSelectCommand<> (this.model, surface, Modes.USER));
         }
         else
             surface.assignTriggerCommand (PushControlSurface.PUSH_BUTTON_USER_MODE, TriggerCommandID.SETUP);
@@ -665,7 +667,10 @@ public class PushControllerSetup extends AbstractControllerSetup<PushControlSurf
         surface.updateTrigger (PushControlSurface.PUSH_BUTTON_BROWSE, Modes.BROWSER == mode ? ColorManager.BUTTON_STATE_HI : ColorManager.BUTTON_STATE_ON);
         surface.updateTrigger (PushControlSurface.PUSH_BUTTON_CLIP, Modes.CLIP == mode ? ColorManager.BUTTON_STATE_HI : ColorManager.BUTTON_STATE_ON);
 
-        surface.updateTrigger (PushControlSurface.PUSH_BUTTON_USER_MODE, Modes.USER == mode ? ColorManager.BUTTON_STATE_HI : ColorManager.BUTTON_STATE_ON);
+        if (this.host.hasUserParameters ())
+            surface.updateTrigger (PushControlSurface.PUSH_BUTTON_USER_MODE, Modes.USER == mode ? ColorManager.BUTTON_STATE_HI : ColorManager.BUTTON_STATE_ON);
+        else
+            surface.updateTrigger (PushControlSurface.PUSH_BUTTON_USER_MODE, this.isPush2 ? ColorManager.BUTTON_STATE_OFF : ColorManager.BUTTON_STATE_ON);
 
         if (this.isPush2)
             surface.updateTrigger (PushControlSurface.PUSH_BUTTON_SETUP, Modes.SETUP == mode ? ColorManager.BUTTON_STATE_HI : ColorManager.BUTTON_STATE_ON);
