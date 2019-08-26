@@ -9,9 +9,9 @@ import de.mossgrabers.controller.push.controller.PushControlSurface;
 import de.mossgrabers.framework.controller.color.ColorManager;
 import de.mossgrabers.framework.controller.display.IGraphicDisplay;
 import de.mossgrabers.framework.controller.display.ITextDisplay;
-import de.mossgrabers.framework.daw.IApplication;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.constants.RecordQuantization;
+import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.mode.AbstractMode;
 import de.mossgrabers.framework.utils.ButtonEvent;
 
@@ -39,14 +39,14 @@ public class RecordMode extends BaseMode
     @Override
     public void updateDisplay1 (final ITextDisplay display)
     {
-        final IApplication application = this.model.getApplication ();
-        final RecordQuantization recQuant = application.getRecordQuantizationGrid ();
+        final ITrack track = this.model.getSelectedTrack ();
+        final RecordQuantization recQuant = track == null ? RecordQuantization.RES_OFF : track.getRecordQuantizationGrid ();
         final RecordQuantization [] values = RecordQuantization.values ();
         display.setBlock (1, 0, "Record Quantize:");
         for (int i = 0; i < values.length; i++)
             display.setCell (3, i, (values[i] == recQuant ? Push1Display.SELECT_ARROW : "") + values[i].getName ());
         display.setBlock (1, 3, "Qunat. Note Len:");
-        display.setCell (3, 6, application.isRecordQuantizationNoteLength () ? "On" : "Off");
+        display.setCell (3, 6, track != null && track.isRecordQuantizationNoteLength () ? "On" : "Off");
     }
 
 
@@ -54,13 +54,14 @@ public class RecordMode extends BaseMode
     @Override
     public void updateDisplay2 (final IGraphicDisplay display)
     {
-        final IApplication application = this.model.getApplication ();
-        final RecordQuantization recQuant = application.getRecordQuantizationGrid ();
+        final ITrack track = this.model.getSelectedTrack ();
+        final RecordQuantization recQuant = track == null ? RecordQuantization.RES_OFF : track.getRecordQuantizationGrid ();
         final RecordQuantization [] values = RecordQuantization.values ();
         for (int i = 0; i < values.length; i++)
             display.addOptionElement ("", "", false, i == 0 ? "Record Quantization" : "", values[i].getName (), values[i] == recQuant, false);
         display.addEmptyElement ();
-        display.addOptionElement ("", "", false, "Quantize Note Length", application.isRecordQuantizationNoteLength () ? "On" : "Off", application.isRecordQuantizationNoteLength (), false);
+        final boolean isQuantLength = track != null && track.isRecordQuantizationNoteLength ();
+        display.addOptionElement ("", "", false, "Quantize Note Length", isQuantLength ? "On" : "Off", isQuantLength, false);
         display.addEmptyElement ();
     }
 
@@ -71,10 +72,14 @@ public class RecordMode extends BaseMode
     {
         if (event != ButtonEvent.UP)
             return;
+
+        final ITrack track = this.model.getSelectedTrack ();
+        if (track == null)
+            return;
         if (index == 6)
-            this.model.getApplication ().toggleRecordQuantizationNoteLength ();
+            track.toggleRecordQuantizationNoteLength ();
         else if (index < 5)
-            this.model.getApplication ().setRecordQuantizationGrid (RecordQuantization.values ()[index]);
+            track.setRecordQuantizationGrid (RecordQuantization.values ()[index]);
     }
 
 
@@ -84,12 +89,12 @@ public class RecordMode extends BaseMode
     {
         final ColorManager colorManager = this.model.getColorManager ();
         final RecordQuantization [] values = RecordQuantization.values ();
-        final IApplication application = this.model.getApplication ();
-        final RecordQuantization recQuant = application.getRecordQuantizationGrid ();
+        final ITrack track = this.model.getSelectedTrack ();
+        final RecordQuantization recQuant = track == null ? RecordQuantization.RES_OFF : track.getRecordQuantizationGrid ();
         for (int i = 0; i < values.length; i++)
             this.surface.updateTrigger (20 + i, colorManager.getColor (values[i] == recQuant ? AbstractMode.BUTTON_COLOR_HI : AbstractMode.BUTTON_COLOR_ON));
         this.surface.updateTrigger (25, colorManager.getColor (AbstractMode.BUTTON_COLOR_OFF));
-        this.surface.updateTrigger (26, colorManager.getColor (application.isRecordQuantizationNoteLength () ? AbstractMode.BUTTON_COLOR_HI : AbstractMode.BUTTON_COLOR_ON));
+        this.surface.updateTrigger (26, colorManager.getColor (track != null && track.isRecordQuantizationNoteLength () ? AbstractMode.BUTTON_COLOR_HI : AbstractMode.BUTTON_COLOR_ON));
         this.surface.updateTrigger (27, colorManager.getColor (AbstractMode.BUTTON_COLOR_OFF));
     }
 }

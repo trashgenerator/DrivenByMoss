@@ -4,10 +4,12 @@
 
 package de.mossgrabers.bitwig.framework.daw.data;
 
+import de.mossgrabers.bitwig.framework.daw.ApplicationImpl;
 import de.mossgrabers.bitwig.framework.daw.SlotBankImpl;
 import de.mossgrabers.framework.controller.IValueChanger;
 import de.mossgrabers.framework.daw.IHost;
 import de.mossgrabers.framework.daw.ISlotBank;
+import de.mossgrabers.framework.daw.constants.RecordQuantization;
 import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.daw.resource.ChannelType;
 import de.mossgrabers.framework.observer.NoteObserver;
@@ -36,6 +38,7 @@ public class TrackImpl extends ChannelImpl implements ITrack
 
     protected final Track           track;
 
+    private final ApplicationImpl   application;
     private final ISlotBank         slotBank;
     private final int []            noteCache     = new int [128];
     private final Set<NoteObserver> noteObservers = new HashSet<> ();
@@ -55,6 +58,7 @@ public class TrackImpl extends ChannelImpl implements ITrack
      *
      * @param host The DAW host
      * @param valueChanger The valueChanger
+     * @param application The application
      * @param cursorTrack The cursor track of the bank to which this track belongs, required for
      *            group navigation
      * @param track The track
@@ -62,13 +66,14 @@ public class TrackImpl extends ChannelImpl implements ITrack
      * @param numSends The number of sends of a bank
      * @param numScenes The number of scenes of a bank
      */
-    public TrackImpl (final IHost host, final IValueChanger valueChanger, final CursorTrack cursorTrack, final Track track, final int index, final int numSends, final int numScenes)
+    public TrackImpl (final IHost host, final IValueChanger valueChanger, final ApplicationImpl application, final CursorTrack cursorTrack, final Track track, final int index, final int numSends, final int numScenes)
     {
         super (host, valueChanger, track, index, numSends);
 
         this.host = host;
         this.cursorTrack = cursorTrack;
         this.track = track;
+        this.application = application;
 
         track.trackType ().markInterested ();
         track.position ().markInterested ();
@@ -365,6 +370,38 @@ public class TrackImpl extends ChannelImpl implements ITrack
         {
             // Intentionally empty
         }
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isRecordQuantizationNoteLength ()
+    {
+        return this.application.isRecordQuantizationNoteLength ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void toggleRecordQuantizationNoteLength ()
+    {
+        this.application.toggleRecordQuantizationNoteLength ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public RecordQuantization getRecordQuantizationGrid ()
+    {
+        return this.application.getRecordQuantizationGrid ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void setRecordQuantizationGrid (final RecordQuantization recordQuantization)
+    {
+        this.application.setRecordQuantizationGrid (recordQuantization);
     }
 
 

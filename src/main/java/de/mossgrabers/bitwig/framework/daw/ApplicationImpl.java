@@ -35,7 +35,6 @@ public class ApplicationImpl implements IApplication
         this.application.panelLayout ().markInterested ();
         this.application.recordQuantizationGrid ().markInterested ();
         this.application.recordQuantizeNoteLength ().markInterested ();
-
     }
 
 
@@ -338,32 +337,42 @@ public class ApplicationImpl implements IApplication
     }
 
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Test if record quantization for note lengths is enabled.
+     *
+     * @return True if enabled
+     */
     public boolean isRecordQuantizationNoteLength ()
     {
         return this.application.recordQuantizeNoteLength ().get ();
     }
 
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Toggle record quantization note length enablement.
+     */
     public void toggleRecordQuantizationNoteLength ()
     {
         this.application.recordQuantizeNoteLength ().toggle ();
     }
 
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Get the record quantization grid.
+     *
+     * @return The record quantization grid resolution
+     */
     public RecordQuantization getRecordQuantizationGrid ()
     {
         return RecordQuantization.getByValue (this.application.recordQuantizationGrid ().get ());
     }
 
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Set the record quantization grid.
+     *
+     * @param recordQuantization The record quantization grid resolution
+     */
     public void setRecordQuantizationGrid (final RecordQuantization recordQuantization)
     {
         this.application.recordQuantizationGrid ().set (recordQuantization.getValue ());

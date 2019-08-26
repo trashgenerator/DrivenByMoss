@@ -4,6 +4,7 @@
 
 package de.mossgrabers.bitwig.framework.daw.data;
 
+import de.mossgrabers.bitwig.framework.daw.ApplicationImpl;
 import de.mossgrabers.framework.controller.IValueChanger;
 import de.mossgrabers.framework.daw.IHost;
 import de.mossgrabers.framework.daw.data.IMasterTrack;
@@ -31,11 +32,12 @@ public class MasterTrackImpl extends TrackImpl implements IMasterTrack
      *
      * @param host The DAW host
      * @param valueChanger The valueChanger
+     * @param application The application
      * @param master The master track
      */
-    public MasterTrackImpl (final IHost host, final IValueChanger valueChanger, final MasterTrack master)
+    public MasterTrackImpl (final IHost host, final IValueChanger valueChanger, final ApplicationImpl application, final MasterTrack master)
     {
-        super (host, valueChanger, null, master, -1, 0, 0);
+        super (host, valueChanger, application, null, master, -1, 0, 0);
 
         this.track.addIsSelectedInEditorObserver (this::handleIsSelected);
     }

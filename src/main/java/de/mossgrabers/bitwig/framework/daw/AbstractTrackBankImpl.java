@@ -25,7 +25,8 @@ import com.bitwig.extension.controller.api.TrackBank;
  */
 public abstract class AbstractTrackBankImpl extends AbstractChannelBank<TrackBank, ITrack> implements ITrackBank
 {
-    protected final CursorTrack cursorTrack;
+    private final ApplicationImpl application;
+    protected final CursorTrack   cursorTrack;
 
 
     /**
@@ -35,14 +36,16 @@ public abstract class AbstractTrackBankImpl extends AbstractChannelBank<TrackBan
      * @param valueChanger The value changer
      * @param cursorTrack The cursor track assigned to this track bank
      * @param bank The bank to encapsulate
+     * @param application The application
      * @param numTracks The number of tracks of a bank page
      * @param numScenes The number of scenes of a bank page
      * @param numSends The number of sends of a bank page
      */
-    public AbstractTrackBankImpl (final IHost host, final IValueChanger valueChanger, final CursorTrack cursorTrack, final TrackBank bank, final int numTracks, final int numScenes, final int numSends)
+    public AbstractTrackBankImpl (final IHost host, final IValueChanger valueChanger, final CursorTrack cursorTrack, final TrackBank bank, final ApplicationImpl application, final int numTracks, final int numScenes, final int numSends)
     {
         super (host, valueChanger, bank, numTracks, numScenes, numSends);
 
+        this.application = application;
         this.cursorTrack = cursorTrack;
 
         this.initItems ();
@@ -110,6 +113,6 @@ public abstract class AbstractTrackBankImpl extends AbstractChannelBank<TrackBan
     protected void initItems ()
     {
         for (int i = 0; i < this.pageSize; i++)
-            this.items.add (new TrackImpl (this.host, this.valueChanger, this.cursorTrack, this.bank.getItemAt (i), i, this.numSends, this.numScenes));
+            this.items.add (new TrackImpl (this.host, this.valueChanger, this.application, this.cursorTrack, this.bank.getItemAt (i), i, this.numSends, this.numScenes));
     }
 }

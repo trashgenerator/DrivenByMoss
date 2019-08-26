@@ -78,7 +78,7 @@ public class ModelImpl extends AbstractModel
         this.transport = new TransportImpl (controllerHost, this.valueChanger);
         this.groove = new GrooveImpl (controllerHost, this.valueChanger);
         final MasterTrack master = controllerHost.createMasterTrack (0);
-        this.masterTrack = new MasterTrackImpl (this.host, this.valueChanger, master);
+        this.masterTrack = new MasterTrackImpl (this.host, this.valueChanger, (ApplicationImpl) this.application, master);
 
         this.cursorTrack = controllerHost.createCursorTrack ("MyCursorTrackID", "The Cursor Track", 0, 0, true);
         this.cursorTrack.isPinned ().markInterested ();
@@ -99,9 +99,9 @@ public class ModelImpl extends AbstractModel
             tb = this.cursorTrack.createSiblingsTrackBank (numTracks, numSends, numScenes, false, false);
 
         this.rootTrackGroup = proj.getRootTrackGroup ();
-        this.trackBank = new TrackBankImpl (this.host, this.valueChanger, tb, this.cursorTrack, this.rootTrackGroup, numTracks, numScenes, numSends);
+        this.trackBank = new TrackBankImpl (this.host, this.valueChanger, tb, this.cursorTrack, this.rootTrackGroup, (ApplicationImpl) this.application, numTracks, numScenes, numSends);
         final TrackBank effectTrackBank = controllerHost.createEffectTrackBank (numTracks, numScenes);
-        this.effectTrackBank = new EffectTrackBankImpl (this.host, this.valueChanger, this.cursorTrack, effectTrackBank, numTracks, numScenes, this.trackBank);
+        this.effectTrackBank = new EffectTrackBankImpl (this.host, this.valueChanger, this.cursorTrack, effectTrackBank, (ApplicationImpl) this.application, numTracks, numScenes, this.trackBank);
 
         this.muteSoloTrackBank = controllerHost.createTrackBank (ALL_TRACKS, 0, 0, true);
         for (int i = 0; i < ALL_TRACKS; i++)
@@ -141,7 +141,7 @@ public class ModelImpl extends AbstractModel
         return this.sceneBanks.computeIfAbsent (Integer.valueOf (numScenes), key -> {
             final TrackBank tb = this.controllerHost.createMainTrackBank (1, this.modelSetup.getNumSends (), numScenes);
             tb.followCursorTrack (this.cursorTrack);
-            return new TrackBankImpl (this.host, this.valueChanger, tb, this.cursorTrack, this.rootTrackGroup, 1, numScenes, 0).getSceneBank ();
+            return new TrackBankImpl (this.host, this.valueChanger, tb, this.cursorTrack, this.rootTrackGroup, (ApplicationImpl) this.application, 1, numScenes, 0).getSceneBank ();
         });
     }
 
