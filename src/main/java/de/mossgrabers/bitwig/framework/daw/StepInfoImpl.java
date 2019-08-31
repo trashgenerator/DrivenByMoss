@@ -101,6 +101,22 @@ public class StepInfoImpl implements IStepInfo
     }
 
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean isEditing ()
+    {
+        return this.isEditing;
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void setEditing (final boolean isEditing)
+    {
+        this.isEditing = isEditing;
+    }
+
+
     /**
      * Set the state.
      *
@@ -182,27 +198,5 @@ public class StepInfoImpl implements IStepInfo
     void setTranspose (final double transpose)
     {
         this.transpose = transpose;
-    }
-
-
-    /**
-     * Check if the note is currently edited.
-     *
-     * @return True if editing is happening
-     */
-    boolean isEditing ()
-    {
-        return this.isEditing;
-    }
-
-
-    /**
-     * Set that the note is currently edited.
-     * 
-     * @param isEditing True if editing is happening
-     */
-    void setEditing (final boolean isEditing)
-    {
-        this.isEditing = isEditing;
     }
 }

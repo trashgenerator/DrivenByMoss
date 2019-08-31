@@ -11,6 +11,7 @@ import de.mossgrabers.framework.controller.display.Format;
 import de.mossgrabers.framework.controller.display.IGraphicDisplay;
 import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IModel;
+import de.mossgrabers.framework.daw.constants.EditCapability;
 import de.mossgrabers.framework.daw.constants.RecordQuantization;
 import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.daw.resource.ChannelType;
@@ -87,9 +88,12 @@ public class QuantizeMode extends BaseMode
         for (int i = 0; i < values.length; i++)
             display.setCell (3, i, (values[i] == recQuant ? Push1Display.SELECT_ARROW : "") + values[i].getName ());
 
-        display.setBlock (2, 2, "       Quant Note");
-        display.setCell (2, 6, "Length:");
-        display.setCell (3, 6, track != null && track.isRecordQuantizationNoteLength () ? "On" : "Off");
+        if (this.model.getHost ().canEdit (EditCapability.QUANTIZE_INPUT_NOTE_LENGTH))
+        {
+            display.setBlock (2, 2, "       Quant Note");
+            display.setCell (2, 6, "Length:");
+            display.setCell (3, 6, track != null && track.isRecordQuantizationNoteLength () ? "On" : "Off");
+        }
 
         final int quantizeAmount = this.surface.getConfiguration ().getQuantizeAmount ();
         display.setCell (0, 7, "Quant Amnt").setCell (1, 7, quantizeAmount + "%").setCell (2, 7, quantizeAmount * 1023 / 100, Format.FORMAT_VALUE);
@@ -106,13 +110,25 @@ public class QuantizeMode extends BaseMode
         for (int i = 0; i < values.length; i++)
             display.addOptionElement ("", MENU[i], i == 0, i == 0 ? "Record Quantization" : "", values[i].getName (), values[i] == recQuant, true);
 
-        display.addOptionElement ("", " ", false, null, "Quantize Note Length", "", false, null, true);
+        if (this.model.getHost ().canEdit (EditCapability.QUANTIZE_INPUT_NOTE_LENGTH))
+        {
+            display.addOptionElement ("", " ", false, null, "Quantize Note Length", "", false, null, true);
+            final boolean isQuantLength = track != null && track.isRecordQuantizationNoteLength ();
+            display.addOptionElement ("", " ", false, "", isQuantLength ? "On" : "Off", isQuantLength, true);
+        }
+        else
+        {
+            display.addEmptyElement (true);
+            display.addEmptyElement (true);
+        }
 
-        final boolean isQuantLength = track != null && track.isRecordQuantizationNoteLength ();
-        display.addOptionElement ("", " ", false, "", isQuantLength ? "On" : "Off", isQuantLength, true);
-
-        final int quantizeAmount = this.surface.getConfiguration ().getQuantizeAmount ();
-        display.addParameterElement (" ", false, "", (ChannelType) null, null, false, "Quant Amnt", quantizeAmount * 1023 / 100, quantizeAmount + "%", this.isKnobTouched[0], -1);
+        if (this.model.getHost ().canEdit (EditCapability.QUANTIZE_AMOUNT))
+        {
+            final int quantizeAmount = this.surface.getConfiguration ().getQuantizeAmount ();
+            display.addParameterElement (" ", false, "", (ChannelType) null, null, false, "Qunt Amnt", quantizeAmount * 1023 / 100, quantizeAmount + "%", this.isKnobTouched[0], -1);
+        }
+        else
+            display.addEmptyElement (true);
     }
 
 

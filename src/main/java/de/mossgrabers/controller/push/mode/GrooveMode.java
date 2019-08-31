@@ -141,6 +141,9 @@ public class GrooveMode extends BaseMode
         final IParameter [] parameters = this.model.getGroove ().getParameters ();
         for (int i = 0; i < parameters.length; i++)
             display.addParameterElement (" ", false, "", (ChannelType) null, null, false, parameters[i].getName (10), parameters[i].getValue (), parameters[i].getDisplayedValue (8), this.isKnobTouched[i], -1);
+
+        for (int i = parameters.length + 2; i < 8; i++)
+            display.addEmptyElement (true);
     }
 
 

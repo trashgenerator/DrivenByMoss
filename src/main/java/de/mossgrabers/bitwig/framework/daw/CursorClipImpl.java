@@ -381,9 +381,9 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public IStepInfo getStep (final int step, final int row)
+    public StepInfoImpl getStep (final int step, final int row)
     {
-        return this.getData ()[step][row];
+        return (this.launcherClip.exists ().get () ? this.launcherData : this.arrangerData)[step][row];
     }
 
 
@@ -413,17 +413,6 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public void updateStepDuration (final int step, final int row, final double duration)
-    {
-        final StepInfoImpl stepInfo = this.getData ()[step][row];
-        stepInfo.setDuration (duration);
-        if (!stepInfo.isEditing ())
-            this.getClip ().updateStepDuration (step, row, duration);
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
     public void changeStepDuration (final int step, final int row, final int control)
     {
         final IStepInfo info = this.getStep (step, row);
@@ -434,12 +423,12 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public void updateStepVelocity (final int step, final int row, final double velocity)
+    public void updateStepDuration (final int step, final int row, final double duration)
     {
-        final StepInfoImpl stepInfo = this.getData ()[step][row];
-        stepInfo.setVelocity (velocity);
+        final StepInfoImpl stepInfo = this.getStep (step, row);
+        stepInfo.setDuration (duration);
         if (!stepInfo.isEditing ())
-            this.getClip ().updateStepVelocity (step, row, velocity);
+            this.getClip ().updateStepDuration (step, row, duration);
     }
 
 
@@ -455,12 +444,12 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public void updateStepReleaseVelocity (final int step, final int row, final double releaseVelocity)
+    public void updateStepVelocity (final int step, final int row, final double velocity)
     {
-        final StepInfoImpl stepInfo = this.getData ()[step][row];
-        stepInfo.setReleaseVelocity (releaseVelocity);
+        final StepInfoImpl stepInfo = this.getStep (step, row);
+        stepInfo.setVelocity (velocity);
         if (!stepInfo.isEditing ())
-            this.getClip ().updateStepReleaseVelocity (step, row, releaseVelocity);
+            this.getClip ().updateStepVelocity (step, row, velocity);
     }
 
 
@@ -476,12 +465,12 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public void updateStepPressure (final int step, final int row, final double pressure)
+    public void updateStepReleaseVelocity (final int step, final int row, final double releaseVelocity)
     {
-        final StepInfoImpl stepInfo = this.getData ()[step][row];
-        stepInfo.setPressure (pressure);
+        final StepInfoImpl stepInfo = this.getStep (step, row);
+        stepInfo.setReleaseVelocity (releaseVelocity);
         if (!stepInfo.isEditing ())
-            this.getClip ().updateStepPressure (step, row, pressure);
+            this.getClip ().updateStepReleaseVelocity (step, row, releaseVelocity);
     }
 
 
@@ -497,12 +486,12 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public void updateStepTimbre (final int step, final int row, final double timbre)
+    public void updateStepPressure (final int step, final int row, final double pressure)
     {
-        final StepInfoImpl stepInfo = this.getData ()[step][row];
-        stepInfo.setTimbre (timbre);
+        final StepInfoImpl stepInfo = this.getStep (step, row);
+        stepInfo.setPressure (pressure);
         if (!stepInfo.isEditing ())
-            this.getClip ().updateStepTimbre (step, row, timbre);
+            this.getClip ().updateStepPressure (step, row, pressure);
     }
 
 
@@ -518,12 +507,12 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public void updateStepPan (final int step, final int row, final double pan)
+    public void updateStepTimbre (final int step, final int row, final double timbre)
     {
-        final StepInfoImpl stepInfo = this.getData ()[step][row];
-        stepInfo.setPan (pan);
+        final StepInfoImpl stepInfo = this.getStep (step, row);
+        stepInfo.setTimbre (timbre);
         if (!stepInfo.isEditing ())
-            this.getClip ().updateStepPan (step, row, pan);
+            this.getClip ().updateStepTimbre (step, row, timbre);
     }
 
 
@@ -539,12 +528,12 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public void updateStepTranspose (final int step, final int row, final double transpose)
+    public void updateStepPan (final int step, final int row, final double pan)
     {
-        final StepInfoImpl stepInfo = this.getData ()[step][row];
-        stepInfo.setTranspose (transpose);
+        final StepInfoImpl stepInfo = this.getStep (step, row);
+        stepInfo.setPan (pan);
         if (!stepInfo.isEditing ())
-            this.getClip ().updateStepTranspose (step, row, transpose);
+            this.getClip ().updateStepPan (step, row, pan);
     }
 
 
@@ -560,6 +549,17 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
+    public void updateStepTranspose (final int step, final int row, final double transpose)
+    {
+        final StepInfoImpl stepInfo = this.getStep (step, row);
+        stepInfo.setTranspose (transpose);
+        if (!stepInfo.isEditing ())
+            this.getClip ().updateStepTranspose (step, row, transpose);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
     public void clearRow (final int row)
     {
         this.getClip ().clearSteps (row);
@@ -570,7 +570,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public boolean hasRowData (final int row)
     {
-        final IStepInfo [] [] data = this.getData ();
+        final IStepInfo [] [] data = this.launcherClip.exists ().get () ? this.launcherData : this.arrangerData;
         for (int step = 0; step < this.numSteps; step++)
         {
             if (data[step][row].getState () > 0)
@@ -695,7 +695,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void edit (final int step, final int row, final boolean enable)
     {
-        final StepInfoImpl stepInfo = this.getData ()[step][row];
+        final StepInfoImpl stepInfo = this.getStep (step, row);
         if (enable)
         {
             stepInfo.setEditing (true);
@@ -710,7 +710,7 @@ public class CursorClipImpl implements INoteClip
 
     private void delayedUpdate (final int step, final int row)
     {
-        final StepInfoImpl stepInfo = this.getData ()[step][row];
+        final StepInfoImpl stepInfo = this.getStep (step, row);
         if (!stepInfo.isEditing ())
             return;
         this.sendClipData (step, row);
@@ -726,7 +726,7 @@ public class CursorClipImpl implements INoteClip
      */
     private void sendClipData (final int step, final int row)
     {
-        final IStepInfo stepInfo = this.getData ()[step][row];
+        final IStepInfo stepInfo = this.getStep (step, row);
         final Clip clip = this.getClip ();
         clip.updateStepDuration (step, row, stepInfo.getDuration ());
         clip.updateStepVelocity (step, row, stepInfo.getVelocity ());
@@ -742,7 +742,7 @@ public class CursorClipImpl implements INoteClip
     {
         final int step = stepInfo.getX ();
         final int row = stepInfo.getY ();
-        final StepInfoImpl sinfo = this.getData ()[step][row];
+        final StepInfoImpl sinfo = this.getStep (step, row);
         if (!sinfo.isEditing ())
             sinfo.updateData (stepInfo);
     }
@@ -751,11 +751,5 @@ public class CursorClipImpl implements INoteClip
     private Clip getClip ()
     {
         return this.launcherClip.exists ().get () ? this.launcherClip : this.arrangerClip;
-    }
-
-
-    private StepInfoImpl [] [] getData ()
-    {
-        return this.launcherClip.exists ().get () ? this.launcherData : this.arrangerData;
     }
 }

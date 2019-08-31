@@ -12,6 +12,7 @@ import de.mossgrabers.bitwig.framework.osc.OpenSoundControlServerImpl;
 import de.mossgrabers.bitwig.framework.usb.UsbDeviceImpl;
 import de.mossgrabers.framework.daw.IHost;
 import de.mossgrabers.framework.daw.IMemoryBlock;
+import de.mossgrabers.framework.daw.constants.EditCapability;
 import de.mossgrabers.framework.graphics.IBitmap;
 import de.mossgrabers.framework.graphics.IImage;
 import de.mossgrabers.framework.osc.IOpenSoundControlCallback;
@@ -98,8 +99,29 @@ public class HostImpl implements IHost
 
     /** {@inheritDoc} */
     @Override
-    public boolean canEditMarkers ()
+    public boolean canEdit (final EditCapability capability)
     {
+        switch (capability)
+        {
+            case MARKERS:
+                return false;
+
+            case NOTE_REPEAT_LENGTH:
+            case NOTE_REPEAT_SWING:
+            case NOTE_REPEAT_VELOCITY_RAMP:
+                return true;
+
+            case NOTE_EDIT_RELEASE_VELOCITY:
+            case NOTE_EDIT_PRESSURE:
+            case NOTE_EDIT_TIMBRE:
+            case NOTE_EDIT_PANORAMA:
+            case NOTE_EDIT_TRANSPOSE:
+                return true;
+
+            case QUANTIZE_INPUT_NOTE_LENGTH:
+            case QUANTIZE_AMOUNT:
+                return true;
+        }
         return false;
     }
 
