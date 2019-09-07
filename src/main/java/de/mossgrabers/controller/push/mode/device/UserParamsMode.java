@@ -99,8 +99,12 @@ public class UserParamsMode extends BaseMode
     {
         if (event != ButtonEvent.UP)
             return;
-        // Toggle between the min and max value
+
         final IParameter param = this.model.getUserParameterBank ().getItem (index);
+        if (!param.doesExist ())
+            return;
+
+        // Toggle between the min and max value
         final int max = this.model.getValueChanger ().getUpperBound () - 1;
         param.setValueImmediatly (param.getValue () < max / 2 ? max : 0);
     }

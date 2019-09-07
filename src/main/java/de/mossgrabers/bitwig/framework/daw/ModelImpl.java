@@ -11,6 +11,8 @@ import de.mossgrabers.framework.daw.IClip;
 import de.mossgrabers.framework.daw.INoteClip;
 import de.mossgrabers.framework.daw.ISceneBank;
 import de.mossgrabers.framework.daw.ModelSetup;
+import de.mossgrabers.framework.daw.data.ISlot;
+import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.scale.Scales;
 import de.mossgrabers.framework.utils.FrameworkException;
 
@@ -136,6 +138,30 @@ public class ModelImpl extends AbstractModel
 
     /** {@inheritDoc} */
     @Override
+    public boolean isCursorTrackPinned ()
+    {
+        return this.cursorTrack.isPinned ().get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void toggleCursorTrackPinned ()
+    {
+        this.cursorTrack.isPinned ().toggle ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isCursorDeviceOnMasterTrack ()
+    {
+        return this.masterTrackEqualsValue.get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
     public ISceneBank createSceneBank (final int numScenes)
     {
         return this.sceneBanks.computeIfAbsent (Integer.valueOf (numScenes), key -> {
@@ -187,35 +213,23 @@ public class ModelImpl extends AbstractModel
 
     /** {@inheritDoc} */
     @Override
+    public void createNoteClip (final ITrack track, final ISlot slot, final int lengthInBeats, boolean overdub)
+    {
+        track.createClip (slot.getIndex (), lengthInBeats);
+        slot.select ();
+        slot.launch ();
+        if (overdub)
+            this.transport.setLauncherOverdub (true);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
     public IClip getClip ()
     {
         if (this.cursorClips.isEmpty ())
             throw new FrameworkException ("No cursor clip created!");
         return this.cursorClips.values ().iterator ().next ();
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isCursorTrackPinned ()
-    {
-        return this.cursorTrack.isPinned ().get ();
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    public void toggleCursorTrackPinned ()
-    {
-        this.cursorTrack.isPinned ().toggle ();
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isCursorDeviceOnMasterTrack ()
-    {
-        return this.masterTrackEqualsValue.get ();
     }
 
 
