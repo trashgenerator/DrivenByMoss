@@ -714,7 +714,7 @@ public class CursorClipImpl implements INoteClip
         if (!stepInfo.isEditing ())
             return;
         this.sendClipData (step, row);
-        this.host.scheduleTask ( () -> delayedUpdate (step, row), 100);
+        this.host.scheduleTask ( () -> this.delayedUpdate (step, row), 100);
     }
 
 

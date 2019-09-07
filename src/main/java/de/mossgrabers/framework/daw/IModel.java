@@ -306,6 +306,15 @@ public interface IModel
     void createNoteClip (ITrack track, ISlot slot, int lengthInBeats, boolean overdub);
 
 
+    /**
+     * Record a new note clip.
+     *
+     * @param track The track which contains the slot
+     * @param slot The slot in which to create a clip
+     */
+    void recordNoteClip (ITrack track, ISlot slot);
+
+
     /***
      * Create or get the default cursor clip.
      *

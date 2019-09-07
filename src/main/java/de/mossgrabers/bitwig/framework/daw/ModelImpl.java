@@ -213,13 +213,23 @@ public class ModelImpl extends AbstractModel
 
     /** {@inheritDoc} */
     @Override
-    public void createNoteClip (final ITrack track, final ISlot slot, final int lengthInBeats, boolean overdub)
+    public void createNoteClip (final ITrack track, final ISlot slot, final int lengthInBeats, final boolean overdub)
     {
         track.createClip (slot.getIndex (), lengthInBeats);
         slot.select ();
         slot.launch ();
         if (overdub)
             this.transport.setLauncherOverdub (true);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void recordNoteClip (final ITrack track, final ISlot slot)
+    {
+        if (!slot.isRecording ())
+            slot.record ();
+        slot.launch ();
     }
 
 
