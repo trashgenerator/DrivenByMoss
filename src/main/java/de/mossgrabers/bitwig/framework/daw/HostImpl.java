@@ -92,6 +92,17 @@ public class HostImpl implements IHost
     /** {@inheritDoc} */
     @Override
     public boolean hasUserParameters ()
+<<<<<<< HEAD
+=======
+    {
+        return true;
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean canEditMarkers ()
+>>>>>>> remotes/origin/master
     {
         return true;
     }

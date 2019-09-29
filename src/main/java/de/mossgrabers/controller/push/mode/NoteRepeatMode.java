@@ -6,6 +6,7 @@ package de.mossgrabers.controller.push.mode;
 
 import de.mossgrabers.controller.push.controller.Push1Display;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
+<<<<<<< HEAD
 import de.mossgrabers.framework.controller.IValueChanger;
 import de.mossgrabers.framework.controller.display.Format;
 import de.mossgrabers.framework.controller.display.IGraphicDisplay;
@@ -18,6 +19,15 @@ import de.mossgrabers.framework.daw.data.IParameter;
 import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.daw.midi.INoteInput;
 import de.mossgrabers.framework.daw.midi.INoteRepeat;
+=======
+import de.mossgrabers.framework.controller.color.ColorManager;
+import de.mossgrabers.framework.controller.display.IGraphicDisplay;
+import de.mossgrabers.framework.controller.display.ITextDisplay;
+import de.mossgrabers.framework.daw.IModel;
+import de.mossgrabers.framework.daw.constants.Resolution;
+import de.mossgrabers.framework.daw.data.ITrack;
+import de.mossgrabers.framework.daw.midi.INoteInput;
+>>>>>>> remotes/origin/master
 import de.mossgrabers.framework.mode.AbstractMode;
 import de.mossgrabers.framework.utils.ButtonEvent;
 import de.mossgrabers.framework.utils.Pair;
@@ -223,6 +233,7 @@ public class NoteRepeatMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
+<<<<<<< HEAD
     public void updateDisplay2 (final IGraphicDisplay display)
     {
         if (this.noteRepeat == null)
@@ -301,5 +312,25 @@ public class NoteRepeatMode extends BaseMode
         final double inc = valueChanger.toNormalizedValue ((int) valueChanger.calcKnobSpeed (control));
         final double value = Math.max (-1.0, Math.min (1.0, this.noteRepeat.getVelocityRamp (selectedTrack) + inc));
         this.noteRepeat.setVelocityRamp (selectedTrack, value);
+=======
+    public void updateDisplay1 (final ITextDisplay display)
+    {
+        final ITextDisplay d = this.surface.getTextDisplay ().clear ();
+        d.setBlock (2, 0, "Repeat Length:");
+        final ITrack selectedTrack = this.model.getCurrentTrackBank ().getSelectedItem ();
+        for (int i = 0; i < 8; i++)
+            d.setCell (3, i, (this.isPeriodSelected (selectedTrack, i) ? Push1Display.SELECT_ARROW : "") + Resolution.getNameAt (i));
+        d.allDone ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void updateDisplay2 (final IGraphicDisplay display)
+    {
+        final ITrack selectedTrack = this.model.getCurrentTrackBank ().getSelectedItem ();
+        for (int i = 0; i < 8; i++)
+            display.addOptionElement ("", "", false, i == 0 ? "Repeat Length" : "", Resolution.getNameAt (i), this.isPeriodSelected (selectedTrack, i), false);
+>>>>>>> remotes/origin/master
     }
 }

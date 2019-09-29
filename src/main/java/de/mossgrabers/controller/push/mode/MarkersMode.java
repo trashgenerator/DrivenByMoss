@@ -105,6 +105,12 @@ public class MarkersMode extends BaseMode
     @Override
     public void updateDisplay1 (final ITextDisplay display)
     {
+<<<<<<< HEAD
+=======
+        final boolean canEditMarkers = this.model.getHost ().canEditMarkers ();
+        final IMarkerBank markerBank = this.model.getMarkerBank ();
+
+>>>>>>> remotes/origin/master
         display.setCell (2, 0, "Markers:");
 
         for (int i = 0; i < 8; i++)
@@ -120,7 +126,11 @@ public class MarkersMode extends BaseMode
                 display.setCell (3, i, StringUtils.shortenAndFixASCII (marker.getName (), 8));
         }
 
+<<<<<<< HEAD
         if (this.canEditMarkers)
+=======
+        if (canEditMarkers)
+>>>>>>> remotes/origin/master
             display.setCell (0, 5, "Action:");
     }
 
@@ -129,6 +139,11 @@ public class MarkersMode extends BaseMode
     @Override
     public void updateDisplay2 (final IGraphicDisplay display)
     {
+<<<<<<< HEAD
+=======
+        final boolean canEditMarkers = this.model.getHost ().canEditMarkers ();
+        final IMarkerBank markerBank = this.model.getMarkerBank ();
+>>>>>>> remotes/origin/master
         for (int i = 0; i < 8; i++)
         {
             final IMarker marker = this.markerBank.getItem (i);

@@ -14,7 +14,10 @@ import de.mossgrabers.framework.daw.IChannelBank;
 import de.mossgrabers.framework.daw.IDrumPadBank;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.data.IChannel;
+<<<<<<< HEAD
 import de.mossgrabers.framework.mode.AbstractMode;
+=======
+>>>>>>> remotes/origin/master
 import de.mossgrabers.framework.utils.ButtonEvent;
 import de.mossgrabers.framework.view.ViewManager;
 import de.mossgrabers.framework.view.Views;
@@ -124,11 +127,16 @@ public class LayerDetailsMode extends BaseMode
 
     /** {@inheritDoc} */
     @Override
+<<<<<<< HEAD
     public void updateSecondRow ()
+=======
+    public void updateDisplay1 (final ITextDisplay display)
+>>>>>>> remotes/origin/master
     {
         final IChannel deviceChain = this.model.getCursorDevice ().getLayerOrDrumPadBank ().getSelectedItem ();
         if (deviceChain == null)
         {
+<<<<<<< HEAD
             this.disableSecondRow ();
             return;
         }
@@ -154,6 +162,8 @@ public class LayerDetailsMode extends BaseMode
         final IChannel deviceChain = this.model.getCursorDevice ().getLayerOrDrumPadBank ().getSelectedItem ();
         if (deviceChain == null)
         {
+=======
+>>>>>>> remotes/origin/master
             display.setRow (1, "                     Please selecta layer...                        ");
             return;
         }
@@ -171,8 +181,11 @@ public class LayerDetailsMode extends BaseMode
         display.setCell (3, 4, "");
         display.setCell (2, 5, "");
         display.setCell (3, 5, "");
+<<<<<<< HEAD
         display.setCell (0, 6, "Clr Mute");
         display.setCell (0, 7, "Clr Solo");
+=======
+>>>>>>> remotes/origin/master
         display.setCell (2, 7, "Select");
         display.setCell (3, 7, "Color");
     }
@@ -195,8 +208,13 @@ public class LayerDetailsMode extends BaseMode
         display.addOptionElement ("", "", false, "", "Solo", deviceChain.isSolo (), false);
         display.addEmptyElement ();
         display.addEmptyElement ();
+<<<<<<< HEAD
         display.addOptionElement ("", "Clear Mute", false, "", "", false, false);
         display.addOptionElement ("", "Clear Solo", false, "", "Select Color", false, false);
+=======
+        display.addEmptyElement ();
+        display.addOptionElement ("", "", false, "", "Select Color", false, false);
+>>>>>>> remotes/origin/master
     }
 
 

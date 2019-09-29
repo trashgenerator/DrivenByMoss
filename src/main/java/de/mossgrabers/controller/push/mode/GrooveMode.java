@@ -6,17 +6,23 @@ package de.mossgrabers.controller.push.mode;
 
 import de.mossgrabers.controller.push.controller.Push1Display;
 import de.mossgrabers.controller.push.controller.PushControlSurface;
+<<<<<<< HEAD
 import de.mossgrabers.framework.controller.color.ColorManager;
+=======
+>>>>>>> remotes/origin/master
 import de.mossgrabers.framework.controller.display.Format;
 import de.mossgrabers.framework.controller.display.IGraphicDisplay;
 import de.mossgrabers.framework.controller.display.ITextDisplay;
 import de.mossgrabers.framework.daw.IGroove;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.data.IParameter;
+<<<<<<< HEAD
 import de.mossgrabers.framework.daw.resource.ChannelType;
 import de.mossgrabers.framework.mode.AbstractMode;
 import de.mossgrabers.framework.mode.Modes;
 import de.mossgrabers.framework.utils.ButtonEvent;
+=======
+>>>>>>> remotes/origin/master
 
 
 /**
@@ -120,6 +126,7 @@ public class GrooveMode extends BaseMode
     public void updateDisplay1 (final ITextDisplay display)
     {
         final IParameter [] parameters = this.model.getGroove ().getParameters ();
+<<<<<<< HEAD
         for (int i = 0; i < parameters.length; i++)
         {
             display.setCell (0, 2 + i, parameters[i].getName (8));
@@ -128,6 +135,12 @@ public class GrooveMode extends BaseMode
         }
         display.setCell (0, 0, MENU[0]);
         display.setCell (0, 1, Push1Display.SELECT_ARROW + MENU[1]);
+=======
+        final int quantizeAmount = this.surface.getConfiguration ().getQuantizeAmount ();
+        display.setCell (0, 0, "Quant Amnt").setCell (1, 0, quantizeAmount + "%").setCell (2, 0, quantizeAmount * 1023 / 100, Format.FORMAT_VALUE);
+        for (int i = 0; i < parameters.length; i++)
+            display.setCell (0, 2 + i, parameters[i].getName (8)).setCell (1, 2 + i, parameters[i].getDisplayedValue (8)).setCell (2, 2 + i, parameters[i].getValue (), Format.FORMAT_VALUE);
+>>>>>>> remotes/origin/master
     }
 
 
@@ -139,6 +152,7 @@ public class GrooveMode extends BaseMode
         display.addOptionElement ("", MENU[1], true, null, "", "", false, null, true);
 
         final IParameter [] parameters = this.model.getGroove ().getParameters ();
+<<<<<<< HEAD
         for (int i = 0; i < parameters.length; i++)
             display.addParameterElement (" ", false, "", (ChannelType) null, null, false, parameters[i].getName (10), parameters[i].getValue (), parameters[i].getDisplayedValue (8), this.isKnobTouched[i], -1);
 
@@ -156,6 +170,15 @@ public class GrooveMode extends BaseMode
         this.surface.updateTrigger (103, colorManager.getColor (AbstractMode.BUTTON_COLOR_HI));
         for (int i = 0; i < 6; i++)
             this.surface.updateTrigger (104 + i, colorManager.getColor (AbstractMode.BUTTON_COLOR_OFF));
+=======
+        final int quantizeAmount = this.surface.getConfiguration ().getQuantizeAmount ();
+        display.addParameterElement ("Quant Amnt", quantizeAmount * 1023 / 100, quantizeAmount + "%", this.isKnobTouched[0], -1);
+        display.addOptionElement ("     Groove", "", false, "", "", false, false);
+        for (int i = 0; i < parameters.length; i++)
+            display.addParameterElement (parameters[i].getName (10), parameters[i].getValue (), parameters[i].getDisplayedValue (8), this.isKnobTouched[i], -1);
+        for (int i = parameters.length; i < 6; i++)
+            display.addEmptyElement ();
+>>>>>>> remotes/origin/master
     }
 
 
