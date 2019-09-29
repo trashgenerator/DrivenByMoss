@@ -205,7 +205,6 @@ public abstract class AbstractGraphicDisplay implements IGraphicDisplay
 
     /** {@inheritDoc} */
     @Override
-<<<<<<< HEAD:src/main/java/de/mossgrabers/framework/controller/display/AbstractGraphicDisplay.java
     public void addEmptyElement (final boolean hasSmallEmptyMenu)
     {
         this.addOptionElement ("", " ", false, "", "", false, true);
@@ -214,8 +213,6 @@ public abstract class AbstractGraphicDisplay implements IGraphicDisplay
 
     /** {@inheritDoc} */
     @Override
-=======
->>>>>>> remotes/origin/master:src/main/java/de/mossgrabers/framework/controller/display/AbstractGraphicDisplay.java
     public void addChannelSelectorElement (final String topMenu, final boolean isTopMenuOn, final String bottomMenu, final ChannelType type, final double [] bottomMenuColor, final boolean isBottomMenuOn, final boolean isActive)
     {
         this.columns.add (new ChannelSelectComponent (type, topMenu, isTopMenuOn, bottomMenu, new ColorEx (bottomMenuColor[0], bottomMenuColor[1], bottomMenuColor[2]), isBottomMenuOn, isActive));

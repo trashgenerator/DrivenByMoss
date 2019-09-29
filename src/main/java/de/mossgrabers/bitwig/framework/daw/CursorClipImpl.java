@@ -614,27 +614,6 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-<<<<<<< HEAD
-=======
-    public void setStepLength (final double length)
-    {
-        this.stepLength = length;
-        this.launcherClip.setStepSize (length);
-        this.arrangerClip.setStepSize (length);
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    public double getStepLength ()
-    {
-        return this.stepLength;
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
->>>>>>> remotes/origin/master
     public void scrollToPage (final int page)
     {
         this.getClip ().scrollToStep (page * this.numSteps);

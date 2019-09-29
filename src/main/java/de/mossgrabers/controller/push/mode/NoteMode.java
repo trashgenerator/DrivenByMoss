@@ -6,7 +6,6 @@ package de.mossgrabers.controller.push.mode;
 
 import de.mossgrabers.controller.push.controller.PushControlSurface;
 import de.mossgrabers.framework.controller.IValueChanger;
-<<<<<<< HEAD
 import de.mossgrabers.framework.controller.display.Format;
 import de.mossgrabers.framework.controller.display.IGraphicDisplay;
 import de.mossgrabers.framework.controller.display.ITextDisplay;
@@ -15,12 +14,6 @@ import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.INoteClip;
 import de.mossgrabers.framework.daw.IStepInfo;
 import de.mossgrabers.framework.daw.constants.EditCapability;
-=======
-import de.mossgrabers.framework.controller.display.IGraphicDisplay;
-import de.mossgrabers.framework.controller.display.ITextDisplay;
-import de.mossgrabers.framework.daw.IModel;
-import de.mossgrabers.framework.daw.INoteClip;
->>>>>>> remotes/origin/master
 import de.mossgrabers.framework.scale.Scales;
 import de.mossgrabers.framework.utils.StringUtils;
 
@@ -277,7 +270,6 @@ public class NoteMode extends BaseMode
     }
 
 
-<<<<<<< HEAD
     /**
      * Format a velocity percentage.
      *
@@ -299,37 +291,5 @@ public class NoteMode extends BaseMode
     private String formatLength (final double duration)
     {
         return StringUtils.formatMeasuresLong (this.model.getTransport ().getQuartersPerMeasure (), duration, 0);
-=======
-    /** {@inheritDoc} */
-    @Override
-    public void updateDisplay1 (final ITextDisplay display)
-    {
-        final int quarters = (int) Math.floor (this.noteLength);
-        final int fine = (int) Math.floor (this.noteLength * 100) % 100;
-        display.setCell (0, 0, "Quarters").setCell (1, 0, Integer.toString (quarters));
-        display.setCell (0, 1, "Fine").setCell (1, 1, Integer.toString (fine));
-        display.setCell (0, 2, "Velocity").setCell (1, 2, Integer.toString (this.noteVelocity * 100 / 127) + "%");
-        display.setBlock (3, 0, "Step: " + (this.step + 1));
-        display.setBlock (3, 1, "Selec. Note: " + Scales.formatNoteAndOctave (this.note, -3));
-
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    public void updateDisplay2 (final IGraphicDisplay display)
-    {
-        final int quarters = (int) Math.floor (this.noteLength);
-        final int fine = (int) Math.floor (this.noteLength * 100) % 100;
-
-        display.addParameterElement ("Quarters", quarters, Integer.toString (quarters), this.isKnobTouched[0], -1);
-        display.addParameterElement ("Fine", fine, Integer.toString (fine), this.isKnobTouched[1], -1);
-        final int parameterValue = this.noteVelocity * 1023 / 127;
-        display.addParameterElement ("Velocity", parameterValue, Integer.toString (this.noteVelocity * 100 / 127) + "%", this.isKnobTouched[2], parameterValue);
-        display.addOptionElement ("    Step: " + (this.step + 1), "", false, "    Selected note: " + Scales.formatNoteAndOctave (this.note, -3), "", false, false);
-        for (int i = 4; i < 8; i++)
-            display.addOptionElement ("", "", false, "", "", false, false);
-
->>>>>>> remotes/origin/master
     }
 }
