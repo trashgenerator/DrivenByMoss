@@ -94,7 +94,7 @@ public class DrumPadBankImpl extends AbstractChannelBankImpl<DrumPadBank, IDrumP
     @Override
     public void clearMute ()
     {
-        this.bank.clearMute ();
+        this.bank.clearMutedPads ();
     }
 
 
@@ -102,6 +102,6 @@ public class DrumPadBankImpl extends AbstractChannelBankImpl<DrumPadBank, IDrumP
     @Override
     public void clearSolo ()
     {
-        this.bank.clearSolo ();
+        this.bank.clearSoloedPads ();
     }
 }

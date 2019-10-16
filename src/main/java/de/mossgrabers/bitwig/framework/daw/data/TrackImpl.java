@@ -14,6 +14,7 @@ import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.daw.resource.ChannelType;
 import de.mossgrabers.framework.observer.NoteObserver;
 
+import com.bitwig.extension.controller.api.BooleanValue;
 import com.bitwig.extension.controller.api.CursorTrack;
 import com.bitwig.extension.controller.api.PlayingNote;
 import com.bitwig.extension.controller.api.Track;
@@ -21,8 +22,6 @@ import com.bitwig.extension.controller.api.Track;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 
 /**
@@ -38,6 +37,7 @@ public class TrackImpl extends ChannelImpl implements ITrack
 
     protected final Track           track;
 
+    private final BooleanValue      isTopGroup;
     private final ApplicationImpl   application;
     private final ISlotBank         slotBank;
     private final int []            noteCache     = new int [128];
@@ -62,12 +62,13 @@ public class TrackImpl extends ChannelImpl implements ITrack
      * @param application The application
      * @param cursorTrack The cursor track of the bank to which this track belongs, required for
      *            group navigation
+     * @param rootGroup The root track
      * @param track The track
      * @param index The index of the track in the page
      * @param numSends The number of sends of a bank
      * @param numScenes The number of scenes of a bank
      */
-    public TrackImpl (final IHost host, final IValueChanger valueChanger, final ApplicationImpl application, final CursorTrack cursorTrack, final Track track, final int index, final int numSends, final int numScenes)
+    public TrackImpl (final IHost host, final IValueChanger valueChanger, final ApplicationImpl application, final CursorTrack cursorTrack, final Track rootGroup, final Track track, final int index, final int numSends, final int numScenes)
     {
         super (host, valueChanger, track, index, numSends);
 
@@ -87,6 +88,9 @@ public class TrackImpl extends ChannelImpl implements ITrack
         track.canHoldAudioData ().markInterested ();
         track.isStopped ().markInterested ();
         track.playingNotes ().addValueObserver (this::handleNotes);
+
+        this.isTopGroup = track.createParentTrack (0, 0).createEqualsValue (rootGroup);
+        this.isTopGroup.markInterested ();
 
         this.slotBank = new SlotBankImpl (host, valueChanger, this, track.clipLauncherSlotBank (), numScenes);
 
@@ -160,6 +164,14 @@ public class TrackImpl extends ChannelImpl implements ITrack
     public boolean isGroup ()
     {
         return this.track.isGroup ().get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasParent ()
+    {
+        return !this.isTopGroup.get ();
     }
 
 
@@ -358,19 +370,7 @@ public class TrackImpl extends ChannelImpl implements ITrack
     @Override
     public void createClip (final int slotIndex, final int lengthInBeats)
     {
-        final Future<Integer> future = this.track.createNewClip (slotIndex, lengthInBeats);
-        try
-        {
-            future.get ();
-        }
-        catch (final InterruptedException ex)
-        {
-            Thread.currentThread ().interrupt ();
-        }
-        catch (final ExecutionException ex)
-        {
-            // Intentionally empty
-        }
+        this.track.createNewClip (slotIndex, lengthInBeats);
     }
 
 

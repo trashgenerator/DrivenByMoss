@@ -7,7 +7,7 @@ package de.mossgrabers.bitwig.framework.midi;
 import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.daw.midi.INoteRepeat;
 
-import com.bitwig.extension.controller.api.NoteRepeat;
+import com.bitwig.extension.controller.api.Arpeggiator;
 
 
 /**
@@ -17,24 +17,41 @@ import com.bitwig.extension.controller.api.NoteRepeat;
  */
 public class NoteRepeatImpl implements INoteRepeat
 {
-    private final NoteRepeat noteRepeat;
+    private final Arpeggiator noteRepeat;
 
 
     /**
      * Constructor.
      *
-     * @param noteRepeat The Bitwig note repeat object
+     * @param arpeggiator The Bitwig arpeggiator object
      */
-    public NoteRepeatImpl (final NoteRepeat noteRepeat)
+    public NoteRepeatImpl (final Arpeggiator arpeggiator)
     {
-        this.noteRepeat = noteRepeat;
+        this.noteRepeat = arpeggiator;
 
         this.noteRepeat.isEnabled ().markInterested ();
         this.noteRepeat.period ().markInterested ();
-        this.noteRepeat.noteLengthRatio ().markInterested ();
+        this.noteRepeat.gateLength ().markInterested ();
         this.noteRepeat.shuffle ().markInterested ();
         this.noteRepeat.usePressureToVelocity ().markInterested ();
-        this.noteRepeat.velocityRamp ().markInterested ();
+        this.noteRepeat.mode ().markInterested ();
+        this.noteRepeat.octaves ().markInterested ();
+        this.noteRepeat.isFreeRunning ().markInterested ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void enableObservers (final boolean enable)
+    {
+        this.noteRepeat.isEnabled ().setIsSubscribed (enable);
+        this.noteRepeat.period ().setIsSubscribed (enable);
+        this.noteRepeat.gateLength ().setIsSubscribed (enable);
+        this.noteRepeat.shuffle ().setIsSubscribed (enable);
+        this.noteRepeat.usePressureToVelocity ().setIsSubscribed (enable);
+        this.noteRepeat.mode ().setIsSubscribed (enable);
+        this.noteRepeat.octaves ().setIsSubscribed (enable);
+        this.noteRepeat.isFreeRunning ().setIsSubscribed (enable);
     }
 
 
@@ -74,7 +91,7 @@ public class NoteRepeatImpl implements INoteRepeat
     @Override
     public void setNoteLength (final ITrack track, final double length)
     {
-        this.noteRepeat.noteLengthRatio ().set (length);
+        this.noteRepeat.gateLength ().set (length);
     }
 
 
@@ -82,7 +99,7 @@ public class NoteRepeatImpl implements INoteRepeat
     @Override
     public double getNoteLength (final ITrack track)
     {
-        return this.noteRepeat.noteLengthRatio ().get ();
+        return this.noteRepeat.gateLength ().get ();
     }
 
 
@@ -120,24 +137,49 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public double getVelocityRamp (final ITrack track)
+    public int getOctaves (final ITrack track)
     {
-        return this.noteRepeat.velocityRamp ().get ();
+        return this.noteRepeat.octaves ().get ();
     }
 
 
     /** {@inheritDoc} */
     @Override
-    public void setVelocityRamp (final ITrack track, final double value)
+    public void setOctaves (final ITrack track, final int octaves)
     {
-        this.noteRepeat.velocityRamp ().set (value);
+        if (octaves >= 0 && octaves < 9)
+            this.noteRepeat.octaves ().set (octaves);
     }
 
 
     /** {@inheritDoc} */
     @Override
-    public String getVelocityRampStr (final ITrack track)
+    public String getMode (final ITrack track)
     {
-        return String.format ("%.2f", Double.valueOf (this.getVelocityRamp (track)));
+        return this.noteRepeat.mode ().get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void setMode (final ITrack track, final String mode)
+    {
+        this.noteRepeat.mode ().set (mode);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isFreeRunning (final ITrack track)
+    {
+        return this.noteRepeat.isFreeRunning ().get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void toggleIsFreeRunning (final ITrack track)
+    {
+        this.noteRepeat.isFreeRunning ().toggle ();
     }
 }

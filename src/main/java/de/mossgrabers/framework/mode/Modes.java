@@ -62,6 +62,8 @@ public enum Modes
 
     /** Edit device parameters. */
     DEVICE_PARAMS,
+    /** Edit device slot chains. */
+    DEVICE_CHAINS,
 
     /** Edit layer parameters. */
     DEVICE_LAYER,
@@ -85,8 +87,6 @@ public enum Modes
     DEVICE_LAYER_SEND7,
     /** Edit Send 8 of all layers. */
     DEVICE_LAYER_SEND8,
-    /** Edit Sends of all layers. */
-    DEVICE_LAYER_SEND,
     /** Edit layer details. */
     DEVICE_LAYER_DETAILS,
 

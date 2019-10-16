@@ -6,7 +6,7 @@ package de.mossgrabers.bitwig.framework.daw;
 
 import de.mossgrabers.framework.daw.IStepInfo;
 
-import com.bitwig.extension.controller.api.Clip.StepInfo;
+import com.bitwig.extension.controller.api.NoteStep;
 
 
 /**
@@ -24,6 +24,7 @@ public class StepInfoImpl implements IStepInfo
     private double  timbre;
     private double  pan;
     private double  transpose;
+    private double  gain;
 
     private boolean isEditing;
 
@@ -103,6 +104,14 @@ public class StepInfoImpl implements IStepInfo
 
     /** {@inheritDoc} */
     @Override
+    public double getGain ()
+    {
+        return this.gain;
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
     public boolean isEditing ()
     {
         return this.isEditing;
@@ -134,9 +143,9 @@ public class StepInfoImpl implements IStepInfo
      *
      * @param stepInfo The step info
      */
-    public void updateData (final StepInfo stepInfo)
+    public void updateData (final NoteStep stepInfo)
     {
-        switch (stepInfo.getState ())
+        switch (stepInfo.state ())
         {
             case NoteOn:
                 this.state = IStepInfo.NOTE_START;
@@ -149,13 +158,14 @@ public class StepInfoImpl implements IStepInfo
                 break;
         }
 
-        this.duration = stepInfo.getDuration ();
-        this.velocity = stepInfo.getVelocity ();
-        this.releaseVelocity = stepInfo.getReleaseVelocity ();
-        this.pressure = stepInfo.getPressure ();
-        this.timbre = stepInfo.getTimbre ();
-        this.pan = stepInfo.getPan ();
-        this.transpose = stepInfo.getTranspose ();
+        this.duration = stepInfo.duration ();
+        this.velocity = stepInfo.velocity ();
+        this.releaseVelocity = stepInfo.releaseVelocity ();
+        this.pressure = stepInfo.pressure ();
+        this.timbre = stepInfo.timbre ();
+        this.pan = stepInfo.pan ();
+        this.transpose = stepInfo.transpose ();
+        this.gain = stepInfo.volume ();
     }
 
 
@@ -198,5 +208,11 @@ public class StepInfoImpl implements IStepInfo
     void setTranspose (final double transpose)
     {
         this.transpose = transpose;
+    }
+
+
+    void setGain (final double gain)
+    {
+        this.gain = gain;
     }
 }

@@ -11,7 +11,9 @@ import de.mossgrabers.framework.daw.data.IMasterTrack;
 import de.mossgrabers.framework.daw.resource.ChannelType;
 import de.mossgrabers.framework.observer.ItemSelectionObserver;
 
+import com.bitwig.extension.controller.api.CursorTrack;
 import com.bitwig.extension.controller.api.MasterTrack;
+import com.bitwig.extension.controller.api.Track;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +36,12 @@ public class MasterTrackImpl extends TrackImpl implements IMasterTrack
      * @param valueChanger The valueChanger
      * @param application The application
      * @param master The master track
+     * @param cursorTrack The cursor track
+     * @param rootGroup The root track
      */
-    public MasterTrackImpl (final IHost host, final IValueChanger valueChanger, final ApplicationImpl application, final MasterTrack master)
+    public MasterTrackImpl (final IHost host, final IValueChanger valueChanger, final MasterTrack master, final CursorTrack cursorTrack, final Track rootGroup, final ApplicationImpl application)
     {
-        super (host, valueChanger, application, null, master, -1, 0, 0);
+        super (host, valueChanger, application, cursorTrack, rootGroup, master, -1, 0, 0);
 
         this.track.addIsSelectedInEditorObserver (this::handleIsSelected);
     }

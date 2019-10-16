@@ -99,6 +99,14 @@ public class HostImpl implements IHost
 
     /** {@inheritDoc} */
     @Override
+    public boolean hasSlotChains ()
+    {
+        return true;
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
     public boolean canEdit (final EditCapability capability)
     {
         switch (capability)
@@ -108,7 +116,10 @@ public class HostImpl implements IHost
 
             case NOTE_REPEAT_LENGTH:
             case NOTE_REPEAT_SWING:
-            case NOTE_REPEAT_VELOCITY_RAMP:
+            case NOTE_REPEAT_MODE:
+            case NOTE_REPEAT_OCTAVES:
+            case NOTE_REPEAT_IS_FREE_RUNNING:
+            case NOTE_REPEAT_USE_PRESSURE_TO_VELOCITY:
                 return true;
 
             case NOTE_EDIT_RELEASE_VELOCITY:
@@ -116,6 +127,7 @@ public class HostImpl implements IHost
             case NOTE_EDIT_TIMBRE:
             case NOTE_EDIT_PANORAMA:
             case NOTE_EDIT_TRANSPOSE:
+            case NOTE_EDIT_GAIN:
                 return true;
 
             case QUANTIZE_INPUT_NOTE_LENGTH:
@@ -189,7 +201,7 @@ public class HostImpl implements IHost
         final OscModule oscModule = this.host.getOscModule ();
         final OscAddressSpace addressSpace = oscModule.createAddressSpace ();
         addressSpace.registerDefaultMethod ( (source, message) -> callback.handle (new OpenSoundControlMessageImpl (message)));
-        return new OpenSoundControlServerImpl (oscModule.createUdpServer2 (addressSpace));
+        return new OpenSoundControlServerImpl (oscModule.createUdpServer (addressSpace));
     }
 
 

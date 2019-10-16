@@ -31,7 +31,7 @@ class NoteInputImpl implements INoteInput
         this.noteInput = noteInput;
         noteInput.setShouldConsumeEvents (false);
 
-        this.noteRepeat = new NoteRepeatImpl (this.noteInput.noteRepeat ());
+        this.noteRepeat = new NoteRepeatImpl (this.noteInput.arpeggiator ());
     }
 
 

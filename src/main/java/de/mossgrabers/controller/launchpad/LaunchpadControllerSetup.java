@@ -6,7 +6,6 @@ package de.mossgrabers.controller.launchpad;
 
 import de.mossgrabers.controller.launchpad.command.continuous.FaderCommand;
 import de.mossgrabers.controller.launchpad.command.trigger.ClickCommand;
-import de.mossgrabers.controller.launchpad.command.trigger.LPSceneCommand;
 import de.mossgrabers.controller.launchpad.command.trigger.LaunchpadCursorCommand;
 import de.mossgrabers.controller.launchpad.command.trigger.LaunchpadDuplicateCommand;
 import de.mossgrabers.controller.launchpad.command.trigger.MuteCommand;
@@ -48,8 +47,9 @@ import de.mossgrabers.controller.launchpad.view.ShiftView;
 import de.mossgrabers.controller.launchpad.view.UserView;
 import de.mossgrabers.controller.launchpad.view.VolumeView;
 import de.mossgrabers.framework.command.ContinuousCommandID;
+import de.mossgrabers.framework.command.SceneCommand;
 import de.mossgrabers.framework.command.TriggerCommandID;
-import de.mossgrabers.framework.command.aftertouch.AftertouchAbstractPlayViewCommand;
+import de.mossgrabers.framework.command.aftertouch.AftertouchAbstractViewCommand;
 import de.mossgrabers.framework.command.trigger.application.DeleteCommand;
 import de.mossgrabers.framework.command.trigger.application.UndoCommand;
 import de.mossgrabers.framework.command.trigger.clip.NewCommand;
@@ -83,6 +83,7 @@ import de.mossgrabers.framework.mode.track.PanMode;
 import de.mossgrabers.framework.mode.track.SoloMode;
 import de.mossgrabers.framework.mode.track.VolumeMode;
 import de.mossgrabers.framework.utils.StringUtils;
+import de.mossgrabers.framework.view.AbstractView;
 import de.mossgrabers.framework.view.SceneView;
 import de.mossgrabers.framework.view.View;
 import de.mossgrabers.framework.view.ViewManager;
@@ -134,6 +135,7 @@ public class LaunchpadControllerSetup extends AbstractControllerSetup<LaunchpadC
     protected void createModel ()
     {
         final ModelSetup ms = new ModelSetup ();
+        ms.setHasFullFlatTrackList (true);
         this.model = this.factory.createModel (this.colorManager, this.valueChanger, this.scales, ms);
         final ITrackBank trackBank = this.model.getTrackBank ();
         trackBank.addSelectionObserver ( (index, isSelected) -> this.handleTrackChange (isSelected));
@@ -248,32 +250,37 @@ public class LaunchpadControllerSetup extends AbstractControllerSetup<LaunchpadC
         this.addTriggerCommand (TriggerCommandID.SENDS, LaunchpadProControllerDefinition.LAUNCHPAD_BUTTON_SENDS, new SendsCommand (this.model, surface));
         this.addTriggerCommand (TriggerCommandID.STOP_CLIP, LaunchpadProControllerDefinition.LAUNCHPAD_BUTTON_STOP_CLIP, new StopClipCommand (this.model, surface));
 
-        if (this.definition.isPro ())
+        if (this.definition.sceneButtonsUseCC ())
         {
-            this.addTriggerCommand (TriggerCommandID.SCENE1, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE1, new LPSceneCommand (0, this.model, surface));
-            this.addTriggerCommand (TriggerCommandID.SCENE2, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE2, new LPSceneCommand (1, this.model, surface));
-            this.addTriggerCommand (TriggerCommandID.SCENE3, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE3, new LPSceneCommand (2, this.model, surface));
-            this.addTriggerCommand (TriggerCommandID.SCENE4, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE4, new LPSceneCommand (3, this.model, surface));
-            this.addTriggerCommand (TriggerCommandID.SCENE5, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE5, new LPSceneCommand (4, this.model, surface));
-            this.addTriggerCommand (TriggerCommandID.SCENE6, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE6, new LPSceneCommand (5, this.model, surface));
-            this.addTriggerCommand (TriggerCommandID.SCENE7, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE7, new LPSceneCommand (6, this.model, surface));
-            this.addTriggerCommand (TriggerCommandID.SCENE8, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE8, new LPSceneCommand (7, this.model, surface));
+            this.addTriggerCommand (TriggerCommandID.SCENE1, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE1, new SceneCommand<> (0, this.model, surface));
+            this.addTriggerCommand (TriggerCommandID.SCENE2, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE2, new SceneCommand<> (1, this.model, surface));
+            this.addTriggerCommand (TriggerCommandID.SCENE3, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE3, new SceneCommand<> (2, this.model, surface));
+            this.addTriggerCommand (TriggerCommandID.SCENE4, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE4, new SceneCommand<> (3, this.model, surface));
+            this.addTriggerCommand (TriggerCommandID.SCENE5, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE5, new SceneCommand<> (4, this.model, surface));
+            this.addTriggerCommand (TriggerCommandID.SCENE6, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE6, new SceneCommand<> (5, this.model, surface));
+            this.addTriggerCommand (TriggerCommandID.SCENE7, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE7, new SceneCommand<> (6, this.model, surface));
+            this.addTriggerCommand (TriggerCommandID.SCENE8, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE8, new SceneCommand<> (7, this.model, surface));
         }
         else
         {
-            this.addNoteCommand (TriggerCommandID.SCENE1, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE1, new LPSceneCommand (0, this.model, surface));
-            this.addNoteCommand (TriggerCommandID.SCENE2, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE2, new LPSceneCommand (1, this.model, surface));
-            this.addNoteCommand (TriggerCommandID.SCENE3, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE3, new LPSceneCommand (2, this.model, surface));
-            this.addNoteCommand (TriggerCommandID.SCENE4, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE4, new LPSceneCommand (3, this.model, surface));
-            this.addNoteCommand (TriggerCommandID.SCENE5, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE5, new LPSceneCommand (4, this.model, surface));
-            this.addNoteCommand (TriggerCommandID.SCENE6, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE6, new LPSceneCommand (5, this.model, surface));
-            this.addNoteCommand (TriggerCommandID.SCENE7, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE7, new LPSceneCommand (6, this.model, surface));
-            this.addNoteCommand (TriggerCommandID.SCENE8, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE8, new LPSceneCommand (7, this.model, surface));
+            this.addNoteCommand (TriggerCommandID.SCENE1, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE1, new SceneCommand<> (0, this.model, surface));
+            this.addNoteCommand (TriggerCommandID.SCENE2, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE2, new SceneCommand<> (1, this.model, surface));
+            this.addNoteCommand (TriggerCommandID.SCENE3, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE3, new SceneCommand<> (2, this.model, surface));
+            this.addNoteCommand (TriggerCommandID.SCENE4, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE4, new SceneCommand<> (3, this.model, surface));
+            this.addNoteCommand (TriggerCommandID.SCENE5, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE5, new SceneCommand<> (4, this.model, surface));
+            this.addNoteCommand (TriggerCommandID.SCENE6, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE6, new SceneCommand<> (5, this.model, surface));
+            this.addNoteCommand (TriggerCommandID.SCENE7, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE7, new SceneCommand<> (6, this.model, surface));
+            this.addNoteCommand (TriggerCommandID.SCENE8, LaunchpadControlSurface.LAUNCHPAD_BUTTON_SCENE8, new SceneCommand<> (7, this.model, surface));
         }
     }
 
 
     /** {@inheritDoc} */
+    @SuppressWarnings(
+    {
+        "rawtypes",
+        "unchecked"
+    })
     @Override
     protected void registerContinuousCommands ()
     {
@@ -281,10 +288,19 @@ public class LaunchpadControllerSetup extends AbstractControllerSetup<LaunchpadC
         for (int i = 0; i < 8; i++)
             this.addContinuousCommand (ContinuousCommandID.get (ContinuousCommandID.KNOB1, i), LaunchpadControlSurface.LAUNCHPAD_FADER_1 + i, new FaderCommand (i, this.model, surface));
         final ViewManager viewManager = surface.getViewManager ();
-        final PlayView playView = (PlayView) viewManager.getView (Views.PLAY);
-        playView.registerAftertouchCommand (new AftertouchAbstractPlayViewCommand<> (playView, this.model, surface));
-        final PianoView pianoView = (PianoView) viewManager.getView (Views.PIANO);
-        pianoView.registerAftertouchCommand (new AftertouchAbstractPlayViewCommand<> (pianoView, this.model, surface));
+
+        Views [] views =
+        {
+            Views.PLAY,
+            Views.PIANO,
+            Views.DRUM,
+            Views.DRUM64
+        };
+        for (final Views viewID: views)
+        {
+            final AbstractView view = (AbstractView) viewManager.getView (viewID);
+            view.registerAftertouchCommand (new AftertouchAbstractViewCommand (view, this.model, surface));
+        }
     }
 
 
@@ -309,17 +325,31 @@ public class LaunchpadControllerSetup extends AbstractControllerSetup<LaunchpadC
             ((SceneView) activeView).updateSceneButtons ();
         }
 
-        if (!this.definition.isPro ())
-            return;
-
         final boolean isShift = surface.isShiftPressed ();
+        surface.setTrigger (surface.getTriggerId (ButtonID.SHIFT), isShift ? LaunchpadColors.LAUNCHPAD_COLOR_WHITE : LaunchpadColors.LAUNCHPAD_COLOR_GREY_LO);
+
+        // Update the front or logo LED with the color of the current track
         final ITrack selTrack = this.model.getSelectedTrack ();
         final int index = selTrack == null ? -1 : selTrack.getIndex ();
+        final ITrack track = index == -1 ? null : this.model.getCurrentTrackBank ().getItem (index);
+        final int color = track != null && track.doesExist () ? this.colorManager.getColor (DAWColors.getColorIndex (track.getColor ())) : 0;
+        if (this.definition.isPro ())
+        {
+            if (color != this.frontColor)
+            {
+                surface.sendLaunchpadSysEx ("0A 63 " + StringUtils.toHexStr (color));
+                this.frontColor = color;
+            }
+        }
+        else
+            surface.setTrigger (LaunchpadControlSurface.LAUNCHPAD_LOGO, color);
+
+        if (!this.definition.isPro ())
+            return;
 
         final ModeManager modeManager = surface.getModeManager ();
         final ITransport transport = this.model.getTransport ();
 
-        surface.setTrigger (LaunchpadProControllerDefinition.LAUNCHPAD_BUTTON_SHIFT, isShift ? LaunchpadColors.LAUNCHPAD_COLOR_WHITE : LaunchpadColors.LAUNCHPAD_COLOR_GREY_LO);
         surface.setTrigger (LaunchpadProControllerDefinition.LAUNCHPAD_BUTTON_CLICK, isShift ? LaunchpadColors.LAUNCHPAD_COLOR_GREEN_SPRING : transport.isMetronomeOn () ? LaunchpadColors.LAUNCHPAD_COLOR_GREEN_HI : LaunchpadColors.LAUNCHPAD_COLOR_GREEN_LO);
         surface.setTrigger (LaunchpadProControllerDefinition.LAUNCHPAD_BUTTON_UNDO, isShift ? LaunchpadColors.LAUNCHPAD_COLOR_GREEN_SPRING : LaunchpadColors.LAUNCHPAD_COLOR_GREEN_LO);
         surface.setTrigger (LaunchpadProControllerDefinition.LAUNCHPAD_BUTTON_DELETE, isShift ? LaunchpadColors.LAUNCHPAD_COLOR_BLACK : LaunchpadColors.LAUNCHPAD_COLOR_GREEN_LO);
@@ -337,15 +367,6 @@ public class LaunchpadControllerSetup extends AbstractControllerSetup<LaunchpadC
         surface.setTrigger (LaunchpadProControllerDefinition.LAUNCHPAD_BUTTON_PAN, viewManager.isActiveView (Views.TRACK_PAN) ? LaunchpadColors.LAUNCHPAD_COLOR_SKY : index == 5 ? LaunchpadColors.LAUNCHPAD_COLOR_WHITE : LaunchpadColors.LAUNCHPAD_COLOR_GREY_LO);
         surface.setTrigger (LaunchpadProControllerDefinition.LAUNCHPAD_BUTTON_SENDS, viewManager.isActiveView (Views.TRACK_SENDS) ? LaunchpadColors.LAUNCHPAD_COLOR_ORCHID : index == 6 ? LaunchpadColors.LAUNCHPAD_COLOR_WHITE : LaunchpadColors.LAUNCHPAD_COLOR_GREY_LO);
         surface.setTrigger (LaunchpadProControllerDefinition.LAUNCHPAD_BUTTON_STOP_CLIP, modeManager.isActiveOrTempMode (Modes.STOP_CLIP) ? LaunchpadColors.LAUNCHPAD_COLOR_ROSE : index == 7 ? LaunchpadColors.LAUNCHPAD_COLOR_WHITE : LaunchpadColors.LAUNCHPAD_COLOR_GREY_LO);
-
-        // Update the front LED with the color of the current track
-        final ITrack track = index == -1 ? null : this.model.getCurrentTrackBank ().getItem (index);
-        final int color = track != null && track.doesExist () ? this.colorManager.getColor (DAWColors.getColorIndex (track.getColor ())) : 0;
-        if (color != this.frontColor)
-        {
-            surface.sendLaunchpadSysEx ("0A 63 " + StringUtils.toHexStr (color));
-            this.frontColor = color;
-        }
     }
 
 
