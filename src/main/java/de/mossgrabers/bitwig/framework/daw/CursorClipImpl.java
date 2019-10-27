@@ -572,7 +572,7 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public void changeStepGain (int channel, int step, int row, int control)
+    public void changeStepGain (final int channel, final int step, final int row, final int control)
     {
         final IStepInfo info = this.getStep (channel, step, row);
         final double gain = info.getGain () + this.valueChanger.toNormalizedValue ((int) this.valueChanger.calcKnobSpeed (control));
