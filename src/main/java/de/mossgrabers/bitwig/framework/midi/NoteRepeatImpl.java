@@ -4,7 +4,6 @@
 
 package de.mossgrabers.bitwig.framework.midi;
 
-import de.mossgrabers.framework.daw.data.ITrack;
 import de.mossgrabers.framework.daw.midi.INoteRepeat;
 
 import com.bitwig.extension.controller.api.Arpeggiator;
@@ -57,7 +56,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public boolean isActive (final ITrack track)
+    public boolean isActive ()
     {
         return this.noteRepeat.isEnabled ().get ();
     }
@@ -65,7 +64,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public void toggleActive (final ITrack track)
+    public void toggleActive ()
     {
         this.noteRepeat.isEnabled ().toggle ();
     }
@@ -73,7 +72,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public void setPeriod (final ITrack track, final double length)
+    public void setPeriod (final double length)
     {
         this.noteRepeat.period ().set (length);
     }
@@ -81,7 +80,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public double getPeriod (final ITrack track)
+    public double getPeriod ()
     {
         return this.noteRepeat.period ().get ();
     }
@@ -89,7 +88,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public void setNoteLength (final ITrack track, final double length)
+    public void setNoteLength (final double length)
     {
         this.noteRepeat.gateLength ().set (length);
     }
@@ -97,7 +96,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public double getNoteLength (final ITrack track)
+    public double getNoteLength ()
     {
         return this.noteRepeat.gateLength ().get ();
     }
@@ -105,7 +104,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public boolean isShuffle (final ITrack track)
+    public boolean isShuffle ()
     {
         return this.noteRepeat.shuffle ().get ();
     }
@@ -113,7 +112,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public void toggleShuffle (final ITrack track)
+    public void toggleShuffle ()
     {
         this.noteRepeat.shuffle ().toggle ();
     }
@@ -121,7 +120,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public boolean usePressure (final ITrack track)
+    public boolean usePressure ()
     {
         return this.noteRepeat.usePressureToVelocity ().get ();
     }
@@ -129,7 +128,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public void toggleUsePressure (final ITrack track)
+    public void toggleUsePressure ()
     {
         this.noteRepeat.usePressureToVelocity ().toggle ();
     }
@@ -137,7 +136,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public int getOctaves (final ITrack track)
+    public int getOctaves ()
     {
         return this.noteRepeat.octaves ().get ();
     }
@@ -145,7 +144,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public void setOctaves (final ITrack track, final int octaves)
+    public void setOctaves (final int octaves)
     {
         if (octaves >= 0 && octaves < 9)
             this.noteRepeat.octaves ().set (octaves);
@@ -154,7 +153,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public String getMode (final ITrack track)
+    public String getMode ()
     {
         return this.noteRepeat.mode ().get ();
     }
@@ -162,7 +161,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public void setMode (final ITrack track, final String mode)
+    public void setMode (final String mode)
     {
         this.noteRepeat.mode ().set (mode);
     }
@@ -170,7 +169,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public boolean isFreeRunning (final ITrack track)
+    public boolean isFreeRunning ()
     {
         return this.noteRepeat.isFreeRunning ().get ();
     }
@@ -178,7 +177,7 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public void toggleIsFreeRunning (final ITrack track)
+    public void toggleIsFreeRunning ()
     {
         this.noteRepeat.isFreeRunning ().toggle ();
     }
