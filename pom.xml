@@ -6,7 +6,7 @@
 	<artifactId>DrivenByMoss-API10</artifactId>
 	<packaging>jar</packaging>
 	<name>DrivenByMoss-API10</name>
-	<version>8.20</version>
+	<version>8.30</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
