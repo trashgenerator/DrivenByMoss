@@ -417,9 +417,9 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public void clearStep (final int step, final int row)
+    public void clearStep (final int channel, final int step, final int row)
     {
-        this.getClip ().clearStep (step, row);
+        this.getClip ().clearStep (channel, step, row);
     }
 
 
@@ -593,11 +593,9 @@ public class CursorClipImpl implements INoteClip
 
     /** {@inheritDoc} */
     @Override
-    public void clearRow (final int row)
+    public void clearRow (final int channel, final int row)
     {
-        final Clip clip = this.getClip ();
-        for (int channel = 0; channel < 16; channel++)
-            clip.clearStepsAtY (channel, row);
+        this.getClip ().clearStepsAtY (channel, row);
     }
 
 
@@ -619,14 +617,14 @@ public class CursorClipImpl implements INoteClip
     @Override
     public int getLowerRowWithData ()
     {
-        int min = -1;
+        int min = 128;
         for (int channel = 0; channel < 16; channel++)
         {
-            final int lower = this.getLowerRowWithData ();
+            final int lower = this.getLowerRowWithData (channel);
             if (lower >= 0 && lower < min)
                 min = lower;
         }
-        return min;
+        return min == 128 ? -1 : min;
     }
 
 
@@ -637,7 +635,7 @@ public class CursorClipImpl implements INoteClip
         int max = -1;
         for (int channel = 0; channel < 16; channel++)
         {
-            final int upper = this.getUpperRowWithData ();
+            final int upper = this.getUpperRowWithData (channel);
             if (upper >= 0 && upper > max)
                 max = upper;
         }

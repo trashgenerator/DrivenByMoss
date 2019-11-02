@@ -4,6 +4,7 @@
 
 package de.mossgrabers.bitwig.framework.midi;
 
+import de.mossgrabers.framework.daw.midi.ArpeggiatorMode;
 import de.mossgrabers.framework.daw.midi.INoteRepeat;
 
 import com.bitwig.extension.controller.api.Arpeggiator;
@@ -67,6 +68,14 @@ public class NoteRepeatImpl implements INoteRepeat
     public void toggleActive ()
     {
         this.noteRepeat.isEnabled ().toggle ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void setActive (final boolean active)
+    {
+        this.noteRepeat.isEnabled ().set (active);
     }
 
 
@@ -153,17 +162,40 @@ public class NoteRepeatImpl implements INoteRepeat
 
     /** {@inheritDoc} */
     @Override
-    public String getMode ()
+    public ArpeggiatorMode getMode ()
     {
-        return this.noteRepeat.mode ().get ();
+        return NoteRepeatModes.lookup (this.noteRepeat.mode ().get ());
     }
 
 
     /** {@inheritDoc} */
     @Override
-    public void setMode (final String mode)
+    public ArpeggiatorMode [] getModes ()
     {
-        this.noteRepeat.mode ().set (mode);
+        return NoteRepeatModes.getArpeggiatorModes ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void setMode (final String modeValue)
+    {
+        this.noteRepeat.mode ().set (modeValue);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void changeMode (final boolean increase)
+    {
+        final ArpeggiatorMode mode = getMode ();
+        if (mode == null)
+            return;
+
+        final int index = mode.getIndex ();
+        final ArpeggiatorMode [] modes = NoteRepeatModes.getArpeggiatorModes ();
+        final int newIndex = Math.max (0, Math.min (modes.length - 1, index + (increase ? 1 : -1)));
+        this.setMode (modes[newIndex].getValue ());
     }
 
 
