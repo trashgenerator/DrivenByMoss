@@ -50,6 +50,8 @@ public enum Views
     SCENE_PLAY,
     /** View for the poly sequencer. */
     POLY_SEQUENCER,
+    /** View for mixing */
+    MIXING,
 
     /** View for browsing. */
     BROWSER,
